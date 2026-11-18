@@ -539,6 +539,28 @@ const D4 = {
   h_s_sev: ["1 is the worst {s} can imagine. 10 is no problem at all.", null, null, null, null, null],
 };
 for (const k in D4) { if (!I[k]) I[k] = {}; LI.forEach((l, i) => { if (D4[k][i] != null) I[k][l] = D4[k][i]; }); }
+const D5 = {
+  e_meds: ["YOUR MEDICINES", "आपकी दवाइयाँ", "మీ మందులు", "உங்கள் மருந்துகள்", "ನಿಮ್ಮ ಔಷಧಿಗಳು", "നിങ്ങളുടെ മരുന്നുകൾ"],
+  t_meds: ["Taking any *medicines* now?", "क्या आप अभी कोई *दवा* ले रहे हैं?", "ఇప్పుడు ఏవైనా *మందులు* వాడుతున్నారా?", "இப்போது ஏதேனும் *மருந்துகள்* எடுக்கிறீர்களா?", "ಈಗ ಯಾವುದಾದರೂ *ಔಷಧಿ* ತೆಗೆದುಕೊಳ್ಳುತ್ತಿದ್ದೀರಾ?", "ഇപ്പോൾ എന്തെങ്കിലും *മരുന്ന്* കഴിക്കുന്നുണ്ടോ?"],
+  h_t_meds: ["Is {s} taking any *medicines* now?", "क्या इन्हें अभी कोई *दवा* चल रही है?", "{o} ప్రస్తుతం ఏవైనా *మందులు* వాడుతున్నారా?", "இவர் இப்போது ஏதேனும் *மருந்துகள்* எடுக்கிறாரா?", "ಇವರು ಈಗ ಯಾವುದಾದರೂ *ಔಷಧಿ* ತೆಗೆದುಕೊಳ್ಳುತ್ತಿದ್ದಾರೆಯೇ?", "ഇവർ ഇപ്പോൾ എന്തെങ്കിലും *മരുന്ന്* കഴിക്കുന്നുണ്ടോ?"],
+  s_meds: ["Include tablets, syrups, injections, inhalers and herbal ones.", "गोली, सिरप, इंजेक्शन, इन्हेलर और घरेलू या आयुर्वेदिक दवाएँ भी बताइए।", "మాత్రలు, సిరప్, ఇంజెక్షన్, ఇన్‌హేలర్, ఆయుర్వేద మందులు కూడా చెప్పండి.", "மாத்திரை, சிரப், ஊசி, இன்ஹேலர், ஆயுர்வேத மருந்துகளையும் சொல்லுங்கள்.", "ಮಾತ್ರೆ, ಸಿರಪ್, ಇಂಜೆಕ್ಷನ್, ಇನ್ಹೇಲರ್, ಆಯುರ್ವೇದ ಔಷಧಿಗಳನ್ನೂ ತಿಳಿಸಿ.", "ഗുളിക, സിറപ്പ്, ഇഞ്ചക്ഷൻ, ഇൻഹേലർ, ആയുർവേദ മരുന്നുകളും പറയൂ."],
+  m_no: ["No, none", "नहीं, कोई नहीं", "లేదు, ఏవీ లేవు", "இல்லை, எதுவும் இல்லை", "ಇಲ್ಲ, ಯಾವುದೂ ಇಲ್ಲ", "ഇല്ല, ഒന്നുമില്ല"],
+  m_reg: ["Yes, regular medicines", "हाँ, रोज़ की दवाएँ", "అవును, రోజూ వాడేవి", "ஆம், தினசரி மருந்துகள்", "ಹೌದು, ನಿತ್ಯದ ಔಷಧಿಗಳು", "ഉണ്ട്, സ്ഥിരം മരുന്നുകൾ"],
+  m_prob: ["Yes, for this problem", "हाँ, इसी तकलीफ़ के लिए", "అవును, ఈ సమస్యకే", "ஆம், இந்தப் பிரச்சனைக்காக", "ಹೌದು, ಈ ಸಮಸ್ಯೆಗಾಗಿ", "ഉണ്ട്, ഈ പ്രശ്നത്തിന്"],
+  m_unsure: ["Not sure", "पक्का नहीं पता", "తెలియదు", "தெரியவில்லை", "ಗೊತ್ತಿಲ್ಲ", "ഉറപ്പില്ല"],
+  mk_q: ["Which kind?", "किस तरह की?", "ఏ రకం?", "எந்த வகை?", "ಯಾವ ರೀತಿಯದು?", "ഏത് തരം?"],
+  mk_sugar: ["Sugar (diabetes)", "शुगर (डायबिटीज़)", "షుగర్ (మధుమేహం)", "சர்க்கரை (நீரிழிவு)", "ಸಕ್ಕರೆ (ಮಧುಮೇಹ)", "ഷുഗർ (പ്രമേഹം)"],
+  mk_bp: ["Blood pressure", "ब्लड प्रेशर", "బీపీ", "ரத்த அழுத்தம்", "ಬಿಪಿ", "ബിപി"],
+  mk_thyroid: ["Thyroid", "थायरॉइड", "థైరాయిడ్", "தைராய்டு", "ಥೈರಾಯ್ಡ್", "തൈറോയ്ഡ്"],
+  mk_pain: ["Painkillers", "दर्द की दवा", "నొప్పి మాత్రలు", "வலி மாத்திரைகள்", "ನೋವಿನ ಮಾತ್ರೆಗಳು", "വേദനസംഹാരി"],
+  mk_anti: ["Antibiotics", "एंटीबायोटिक", "యాంటీబయాటిక్స్", "ஆன்டிபயாடிக்", "ಆ್ಯಂಟಿಬಯಾಟಿಕ್", "ആന്റിബയോട്ടിക്"],
+  mk_inhaler: ["Inhaler", "इन्हेलर", "ఇన్‌హేలర్", "இன்ஹேலர்", "ಇನ್ಹೇಲರ್", "ഇൻഹേലർ"],
+  mk_vit: ["Vitamins or supplements", "विटामिन या सप्लीमेंट", "విటమిన్లు లేదా సప్లిమెంట్లు", "வைட்டமின் அல்லது சப்ளிமெண்ட்", "ವಿಟಮಿನ್ ಅಥವಾ ಸಪ್ಲಿಮೆಂಟ್", "വിറ്റാമിൻ / സപ്ലിമെന്റ്"],
+  mk_herbal: ["Ayurvedic or herbal", "आयुर्वेदिक या घरेलू", "ఆయుర్వేదం లేదా ఇంటి మందులు", "ஆயுர்வேதம் அல்லது கை மருந்து", "ಆಯುರ್ವೇದ ಅಥವಾ ಮನೆಮದ್ದು", "ആയുർവേദം / നാട്ടുമരുന്ന്"],
+  mk_other: ["Something else", "कुछ और", "ఇంకేదైనా", "வேறு ஏதாவது", "ಬೇರೆ ಏನಾದರೂ", "മറ്റെന്തെങ്കിലും"],
+  ph_meds: ["Type medicine names (optional)", "दवाओं के नाम लिखें (वैकल्पिक)", "మందుల పేర్లు టైప్ చేయండి (ఐచ్ఛికం)", "மருந்துகளின் பெயர்களைத் தட்டச்சு செய்யுங்கள் (விருப்பம்)", "ಔಷಧಿಗಳ ಹೆಸರು ಟೈಪ್ ಮಾಡಿ (ಐಚ್ಛಿಕ)", "മരുന്നുകളുടെ പേര് ടൈപ്പ് ചെയ്യൂ (ഓപ്ഷണൽ)"],
+};
+for (const k in D5) { if (!I[k]) I[k] = {}; LI.forEach((l, i) => { if (D5[k][i] != null) I[k][l] = D5[k][i]; }); }
 
 (() => {
 const $ = (s, r = document) => r.querySelector(s);
@@ -549,27 +571,29 @@ const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
 
 /* ---------------- state ---------------- */
-const fresh = (lang = 'en') => ({ lang, step: 'welcome', helper: false, helperOk: false, editing: false, name: '', age: '', gender: '', phone: '', appt: '', linked: false, abha: '', recPhone: false, abhaOk: false, files: [], sid: '', synced: false, concern: [], concernText: '',
-  since: null, sev: null, trend: null, extra: [], extraText: '', hist: [], histAllergy: '', histMeds: '', histSurgery: '', histText: '', asks: [''], t0: null, sent: null, reviewed: false });
+const fresh = (lang = 'en') => ({ lang, step: 'welcome', helper: false, helperOk: false, editing: false, name: '', age: '', gender: '', doc: 'sharma', phone: '', appt: '', linked: false, abha: '', recPhone: false, abhaOk: false, files: [], sid: '', synced: false, concern: [], concernText: '',
+  since: null, sev: null, trend: null, extra: [], extraText: '', hist: [], histAllergy: '', histMeds: '', medsAns: '', medsKinds: [], medsText: '', histSurgery: '', histText: '', asks: [''], t0: null, sent: null, reviewed: false });
 let S;
 try { S = Object.assign(fresh(), JSON.parse(lsGet(KEY) || '{}')); } catch (e) { S = fresh(); }
 const save = () => lsSet(KEY, JSON.stringify(S));
 let view = lsGet(VKEY) || 'patient';
 if (location.hash === '#doctor') view = 'doctor';
+const DOCTORS = [{ id: 'sharma', name: 'Dr. Sharma', spec: 'ENT' }, { id: 'rao', name: 'Dr. Rao', spec: 'General Medicine' }, { id: 'iyer', name: 'Dr. Iyer', spec: 'Pediatrics' }, { id: 'khan', name: 'Dr. Khan', spec: 'Dermatology' }, { id: 'reddy', name: 'Dr. Reddy', spec: 'Orthopedics' }];
+const docOf = id => DOCTORS.find(d => d.id === id) || DOCTORS[0];
 let sheet = null;
 /* prefilled customer link: ?n=Ravi&p=9876543210&t=6:00%20AM&a=34&g=m&l=te */
 (() => { const q = new URLSearchParams(location.search); if (!(q.get('n') || q.get('p') || q.get('t'))) return;
   if (lsGet('pc_link') === location.search) return;
   const l = ['en', 'hi', 'te', 'ta', 'kn', 'ml'].includes(q.get('l')) ? q.get('l') : S.lang;
   S = fresh(l); S.name = (q.get('n') || '').slice(0, 40); S.phone = (q.get('p') || '').replace(/\D/g, '').slice(-10); S.age = (q.get('a') || '').replace(/\D/g, '').slice(0, 3);
-  S.gender = ['f', 'm', 'o'].includes(q.get('g')) ? q.get('g') : ''; S.appt = (q.get('t') || '').slice(0, 20); S.linked = true;
+  S.gender = ['f', 'm', 'o'].includes(q.get('g')) ? q.get('g') : ''; S.appt = (q.get('t') || '').slice(0, 20); S.linked = true; S.doc = DOCTORS.some(d => d.id === q.get('d')) ? q.get('d') : 'sharma';
   lsSet('pc_link', location.search); save(); view = 'patient'; lsSet(VKEY, 'patient'); })();
 const isAdmin = () => lsGet('pc_admin') === '1';
 if (location.hash === '#doctor' && !isAdmin()) view = 'patient';
 const LG = { u: '', p: '', err: '' };
 
-const ORDER = ['welcome', 'about', 'records', 'concern', 'since', 'sev', 'trend', 'extra', 'hist', 'ask', 'review', 'done'];
-const PROG = { about: 1, records: 1, concern: 2, since: 3, sev: 3, trend: 3, extra: 4, hist: 5, ask: 6, review: 7 };
+const ORDER = ['welcome', 'about', 'records', 'concern', 'since', 'sev', 'trend', 'extra', 'hist', 'meds', 'ask', 'review', 'done'];
+const PROG = { about: 1, records: 1, concern: 2, since: 3, sev: 3, trend: 3, extra: 4, hist: 5, meds: 5, ask: 6, review: 7 };
 const CONCERN = ['fever', 'headache', 'pain', 'cough', 'throat', 'ear', 'stomach', 'skin', 'other'];
 const GENERAL = ['tired', 'appetite', 'nausea', 'dizzy', 'breath', 'sleep', 'itch', 'weightloss'];
 const SYM = {
@@ -585,10 +609,12 @@ const SYM = {
 const symList = (concern) => { const out = []; (concern || []).forEach(c => (SYM[c] || []).forEach(k => { if (!out.includes(k)) out.push(k); })); return (out.length ? out : GENERAL).concat('none'); };
 const RED = { breath: 'Breathing trouble reported', chesttight: 'Chest tightness reported', bloodcough: 'Blood when coughing', bloodstool: 'Blood in stool', neck: 'Stiff neck reported', vision: 'Blurry vision reported', spread: 'Skin problem spreading fast' };
 const GEN = { f: 'Female', m: 'Male', o: 'Other / not stated' };
-const HIST = ['diabetes', 'bp', 'heart', 'asthma', 'thyroid', 'allergy', 'surgery', 'meds', 'unsure'];
+const HIST = ['diabetes', 'bp', 'heart', 'asthma', 'thyroid', 'allergy', 'surgery', 'unsure'];
+const MEDS_ANS = ['no', 'reg', 'prob', 'unsure'];
+const MEDS_KINDS = ['sugar', 'bp', 'thyroid', 'pain', 'anti', 'inhaler', 'vit', 'herbal', 'other'];
 const SINCE = ['today', 'few', 'week', 'long', 'unsure'];
 const TREND = ['better', 'same', 'worse'];
-const PFX = { concern: 'c_', extra: 'x_', hist: 'h_', since: 'd_', trend: 'tr_' };
+const PFX = { concern: 'c_', extra: 'x_', hist: 'h_', since: 'd_', trend: 'tr_', medsAns: 'm_', medsKinds: 'mk_' };
 
 const PN = { en: { f: ['she', 'her', 'her', 'has'], m: ['he', 'him', 'his', 'has'], o: ['they', 'them', 'their', 'have'] }, hi: { f: 'इन्हें', m: 'इन्हें', o: 'इन्हें' }, te: { f: 'ఆమెకు', m: 'అతనికి', o: 'వారికి' }, ta: { f: 'அவருக்கு', m: 'அவருக்கு', o: 'அவருக்கு' }, kn: { f: 'ಅವರಿಗೆ', m: 'ಅವರಿಗೆ', o: 'ಅವರಿಗೆ' }, ml: { f: 'അവർക്ക്', m: 'അവർക്ക്', o: 'അവർക്ക്' } };
 function pron(s, lang) {
@@ -602,7 +628,9 @@ const t0 = (k, v) => {
   let s = (I[k] && (I[k][S.lang] || I[k].en)) || k; if (v) for (const x in v) s = s.replace('{' + x + '}', v[x]); return s;
 };
 const tl = (k, l) => (I[k] && (I[k][l] || I[k].en)) || k;
-const t = (k, v) => { let s = t0(k, v); if (S.appt) s = s.replace(/10:30/g, S.appt); return s; };
+const t = (k, v) => { let s = t0(k, v); if (S.appt) s = s.replace(/10:30/g, S.appt);
+  if (S.doc && S.doc !== 'sharma') { const D = docOf(S.doc); if (k === 'spec') return D.spec; s = s.replace(/Dr\. Sharma|डॉ\. शर्मा|డా\. శర్మ|டாக்டர் சர்மா|ಡಾ\. ಶರ್ಮಾ|ഡോ\. ശർമ്മ/g, D.name).replace(/DR\. SHARMA/g, D.name.toUpperCase()); }
+  return s; };
 const rich = s => esc(s).replace(/\*(.+?)\*/g, '<em>$1</em>');
 const lab = (grp, key) => t(PFX[grp] + key);
 const en = (grp, key) => tl(PFX[grp] + key, 'en');
@@ -722,7 +750,7 @@ function scrExtra() {
     ${ta('extraText', t('ph_extra'), S.extraText)}${why(t('why_extra'))}</div>${foot(btnNext(false))}</div>`;
 }
 function scrHist() {
-  const cond = { allergy: ['histAllergy', 'q_allergy'], meds: ['histMeds', 'q_meds'], surgery: ['histSurgery', 'q_surgery'] };
+  const cond = { allergy: ['histAllergy', 'q_allergy'], surgery: ['histSurgery', 'q_surgery'] };
   const items = HIST.map(k => {
     const on = S.hist.includes(k);
     let h = `<button class="opt" aria-pressed="${on}" data-act="tog" data-grp="hist" data-v="${k}">${MK(true)}<span>${esc(lab('hist', k))}</span></button>`;
@@ -731,6 +759,12 @@ function scrHist() {
   }).join('');
   return `<div class="scr">${header('hist')}<div class="body" style="gap:16px">${head(t('e_hist'), t('t_hist'), t('s_hist'))}<div class="opts">${items}</div>
     ${ta('histText', t('ph_hist'), S.histText)}<p class="muted" style="font-size:14px">${esc(t('hist_note'))}</p></div>${foot(btnNext(false))}</div>`;
+}
+function scrMeds() {
+  const yes = S.medsAns === 'reg' || S.medsAns === 'prob';
+  return `<div class="scr">${header('meds')}<div class="body" style="gap:16px">${head(t('e_meds'), t('t_meds'), t('s_meds'))}${singleHtml(MEDS_ANS, 'medsAns')}
+    ${yes ? `<div style="display:flex;flex-direction:column;gap:10px"><div class="mono muted">${esc(t('mk_q'))}</div>${chipsHtml(MEDS_KINDS, 'medsKinds')}</div>
+    <textarea class="ta" rows="3" style="min-height:84px" data-bind="medsText" placeholder="${esc(t('ph_meds'))}">${esc(S.medsText)}</textarea>` : ''}</div>${foot(btnNext(false), btnSkip())}</div>`;
 }
 function scrAsk() {
   return `<div class="scr">${header('ask')}<div class="body">${head(t('e_ask'), t('t_ask'), t('s_ask'))}
@@ -744,11 +778,12 @@ function reviewRows() {
   const main = [listText('concern'), S.concernText.trim() ? '“' + S.concernText.trim() + '”' : ''].filter(Boolean).join('\n');
   const how = [S.since ? lab('since', S.since) : '', S.sev ? (11 - S.sev) + '/10' : '', S.trend ? lab('trend', S.trend) : ''].filter(Boolean).join(' · ');
   const also = [listText('extra'), S.extraText.trim()].filter(Boolean).join('\n');
-  const hl = S.hist.map(k => { let x = lab('hist', k); const d = { allergy: S.histAllergy, meds: S.histMeds, surgery: S.histSurgery }[k]; return d && d.trim() ? x + ': ' + d.trim() : x; });
+  const hl = S.hist.map(k => { let x = lab('hist', k); const d = { allergy: S.histAllergy, surgery: S.histSurgery }[k]; return d && d.trim() ? x + ': ' + d.trim() : x; });
   if (S.histText.trim()) hl.push(S.histText.trim());
   const asks = S.asks.map(a => a.trim()).filter(Boolean);
   const rl = []; if (S.recPhone) rl.push(t('rec_phone')); if (S.abhaOk) rl.push('ABHA'); S.files.forEach(f => rl.push(f.name));
-  const R = [['concern', t('r_main'), main, none], ['since', t('r_since'), how, `<span class="skip">${esc(t('skipped'))}</span>`], ['extra', t('r_also'), also, none], ['hist', t('r_hist'), hl.join('\n'), none], ['records', t('e_rec'), rl.join('\n'), none], ['ask', t('r_ask'), asks.join('\n'), none]];
+  const medsTxt = [S.medsAns ? lab('medsAns', S.medsAns) : '', S.medsKinds.map(k => lab('medsKinds', k)).join(', '), S.medsText.trim()].filter(Boolean).join('\n');
+  const R = [['concern', t('r_main'), main, none], ['since', t('r_since'), how, `<span class="skip">${esc(t('skipped'))}</span>`], ['extra', t('r_also'), also, none], ['hist', t('r_hist'), hl.join('\n'), none], ['meds', t('e_meds'), medsTxt, none], ['records', t('e_rec'), rl.join('\n'), none], ['ask', t('r_ask'), asks.join('\n'), none]];
   return R.map(r => `<div class="rrow"><div><div class="mono">${esc(r[1])}</div><p>${r[2] ? esc(r[2]) : r[3]}</p></div><button data-act="edit" data-step="${r[0] === 'ask' ? 'ask' : r[0]}">${esc(t('edit'))}</button></div>`).join('');
 }
 function scrReview() {
@@ -766,7 +801,7 @@ function scrDone() {
     <button class="demo" data-act="to-doctor">DEMO · OPEN DOCTOR'S VIEW (iPad) →</button>
   </div>${foot(`<button class="btn s" data-act="edit-mine">${esc(t('edit_mine'))}</button>`, `<button class="btn g" data-act="sheet" data-v="delete">${esc(t('del_mine'))}</button>`)}</div>`;
 }
-const SCREENS = { welcome: scrWelcome, about: scrAbout, records: scrRecords, concern: scrConcern, since: scrSince, sev: scrSev, trend: scrTrend, extra: scrExtra, hist: scrHist, ask: scrAsk, review: scrReview, done: scrDone };
+const SCREENS = { welcome: scrWelcome, about: scrAbout, records: scrRecords, concern: scrConcern, since: scrSince, sev: scrSev, trend: scrTrend, extra: scrExtra, hist: scrHist, meds: scrMeds, ask: scrAsk, review: scrReview, done: scrDone };
 
 /* ---------------- sheets ---------------- */
 function sheetHtml() {
@@ -801,6 +836,7 @@ $('#app').addEventListener('click', e => {
   if (a === 'back') { const p = prevOf(S.step); if (S.editing && p === 'review') S.editing = false; return go(p, true); }
   if (a === 'next') return go(nextOf(S.step));
   if (a === 'skip' && S.step === 'records') return go(nextOf('records'));
+  if (a === 'skip' && S.step === 'meds') return go(nextOf('meds'));
   if (a === 'skip') { if (S.step === 'since') S.since = null; if (S.step === 'sev') S.sev = null; if (S.step === 'trend') S.trend = null; return go(nextOf(S.step)); }
   if (a === 'sheet') { sheet = v; return renderPatient(false); }
   if (a === 'sheet-close') { sheet = null; return renderPatient(false); }
@@ -819,7 +855,10 @@ $('#app').addEventListener('click', e => {
     if (i >= 0) arr.splice(i, 1);
     else { if (excl && v === excl) arr.length = 0; else if (excl && arr.includes(excl)) arr.splice(arr.indexOf(excl), 1); arr.push(v); }
     if (g === 'concern') { const ok = symList(S.concern); S.extra = S.extra.filter(k => ok.includes(k)); }
-    save(); return renderPatient(false);
+    save(); renderPatient(false);
+    if (g === 'concern' && v === 'other' && S.concern.includes('other')) { const f = $('#app textarea[data-bind=concernText]'); if (f) { f.focus(); const L = f.value.length; try { f.setSelectionRange(L, L); } catch (er) {} f.scrollIntoView({ block: 'center' }); } }
+    if (g === 'medsKinds' && v === 'other' && S.medsKinds.includes('other')) { const f = $('#app textarea[data-bind=medsText]'); if (f) f.focus(); }
+    return;
   }
   if (a === 'pick') { S[g] = g === 'sev' ? +v : v; save(); return renderPatient(false); }
   if (a === 'addq') { S.asks.push(''); save(); return renderPatient(false); }
@@ -873,16 +912,20 @@ function summarize(p) {
   if (h.includes('heart')) flags.push('Heart problem');
   if (h.includes('asthma')) flags.push('Asthma / breathing problem');
   if (h.includes('allergy')) flags.push('Allergy: ' + ((p.histAllergy || '').trim() || 'not specified'));
-  if (h.includes('meds')) flags.push('On medicines: ' + ((p.histMeds || '').trim() || 'not listed'));
+  const mYes = p.medsAns === 'reg' || p.medsAns === 'prob' || h.includes('meds');
+  const mKinds = (p.medsKinds || []).map(k => en('medsKinds', k));
+  if (mYes) flags.push('On medicines' + (p.medsAns === 'prob' ? ' (for this problem)' : '') + ': ' + ([mKinds.join(', '), (p.medsText || p.histMeds || '').trim()].filter(Boolean).join(' · ') || 'not listed'));
   if (p.sev >= 8) flags.push(`Severity ${p.sev}/10`);
   (p.extra || []).forEach(k => { if (RED[k]) flags.push(RED[k]); });
   const typed = [p.concernText, p.extraText, p.histText, ...(p.asks || [])].join(' ').toLowerCase();
   const hit = WORDS.filter(w => typed.includes(w)); if (hit.length) flags.push('Typed text mentions: ' + hit.join(', '));
   const other = [];
   if (h.includes('thyroid')) other.push('Thyroid problem');
+  if (p.medsAns === 'no') other.push('Not on any current medicines');
   if (h.includes('surgery')) other.push('Past surgery' + ((p.histSurgery || '').trim() ? ': ' + p.histSurgery.trim() : ''));
   if ((p.histText || '').trim()) other.push('Patient adds: “' + p.histText.trim() + '”');
   const notShared = [];
+  if (p.medsAns === 'unsure') notShared.push('Not sure about current medicines. Worth asking in person.');
   if (h.includes('unsure')) notShared.push('Marked “not sure / prefer not to say” for health history. Worth asking in person.');
   const skipped = []; if (!p.since) skipped.push('how long'); if (!p.sev) skipped.push('severity'); if (!p.trend) skipped.push('trend');
   if (skipped.length) notShared.push('Skipped: ' + skipped.join(', ') + '.');
@@ -891,7 +934,7 @@ function summarize(p) {
   const asks = (p.asks || []).map(a => a.trim()).filter(Boolean);
   const secs = p.secs || 120; const mins = Math.floor(secs / 60);
   const sent = p.sentAt ? new Date(p.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-  const s = { name, age, lang: L.en, records: (() => { const r = []; if (p.recPhone) r.push('Older records fetched with mobile number (demo): ' + DEMO_REC.map(x => x[0] + ', ' + x[1].split(' · ')[0]).join('; ')); if (p.abhaOk) r.push('ABHA linked' + ((p.abha || '').trim() ? ' (' + p.abha.trim() + ')' : '') + ' (demo)'); (p.files || []).forEach(f => r.push('PDF attached: ' + f.name + ' (' + fmtSize(f.size) + ')')); return r; })(), gender: GEN[p.gender] || '', helper: !!p.helper, title: name + (age ? ', ' + age : '') + (p.gender === 'f' ? ' · F' : p.gender === 'm' ? ' · M' : ''), meta: `${p.appt || '10:30 AM'}  ·  ${L.en}  ·  ` + (ph ? `+91 ${ph}  ·  ` : '') + (p.helper ? 'filled in by a helper  ·  ' : '') + `filled in ${mins ? mins + ' min ' : ''}${secs % 60}s` + (sent ? `  ·  sent ${sent}` : ''),
+  const s = { name, age, lang: L.en, records: (() => { const r = []; if (p.recPhone) r.push('Older records fetched with mobile number (demo): ' + DEMO_REC.map(x => x[0] + ', ' + x[1].split(' · ')[0]).join('; ')); if (p.abhaOk) r.push('ABHA linked' + ((p.abha || '').trim() ? ' (' + p.abha.trim() + ')' : '') + ' (demo)'); (p.files || []).forEach(f => r.push('PDF attached: ' + f.name + ' (' + fmtSize(f.size) + ')')); return r; })(), doc: docOf(p.doc).name, gender: GEN[p.gender] || '', helper: !!p.helper, title: name + (age ? ', ' + age : '') + (p.gender === 'f' ? ' · F' : p.gender === 'm' ? ' · M' : ''), meta: `${p.appt || '10:30 AM'}  ·  ${docOf(p.doc).name}  ·  ${L.en}  ·  ` + (ph ? `+91 ${ph}  ·  ` : '') + (p.helper ? 'filled in by a helper  ·  ' : '') + `filled in ${mins ? mins + ' min ' : ''}${secs % 60}s` + (sent ? `  ·  sent ${sent}` : ''),
     quote: own || (chips.length ? chips.join(', ') : ''), rewrite, dur: dur ? dur.replace(/^(since|for)\s/, '') : null, durFull: dur, sev: p.sev, trend: trendP, flags, other, notShared, also, alsoText: (p.extraText || '').trim(), asks };
   s.text = [`PRE-VISIT SUMMARY — ${s.title}`, s.meta, '',
     flags.length ? 'CRITICAL FLAGS: ' + flags.join('; ') : 'CRITICAL FLAGS: none reported', '',
@@ -923,7 +966,7 @@ let syncOk = false, syncAt = '';
 function mergeInbox(p) { if (!p || !p.id || DEL.includes(p.id)) return false; const i = INBOX.findIndex(x => x.id === p.id); if (i >= 0) { if ((INBOX[i].sentAt || 0) >= (p.sentAt || 0)) return false; p.reviewed = INBOX[i].reviewed && false; INBOX[i] = p; } else INBOX.push(p); return true; }
 function slim(p) { const o = JSON.parse(JSON.stringify(p)); delete o.sent; delete o.t0; delete o.synced; delete o.helperOk; delete o.editing; delete o.reviewed; delete o.step; delete o.linked;
   const cut = (s, n) => (typeof s === 'string' ? s.slice(0, n) : s);
-  ['concernText', 'extraText', 'histText', 'histSurgery', 'histMeds', 'histAllergy'].forEach(k => { o[k] = cut(o[k], 400); }); o.asks = (o.asks || []).slice(0, 3).map(a => cut(a, 200)); o.files = (o.files || []).slice(0, 5).map(f => ({ name: cut(f.name, 40), size: f.size }));
+  ['concernText', 'extraText', 'histText', 'histSurgery', 'histMeds', 'medsText', 'histAllergy'].forEach(k => { o[k] = cut(o[k], 400); }); o.asks = (o.asks || []).slice(0, 3).map(a => cut(a, 200)); o.files = (o.files || []).slice(0, 5).map(f => ({ name: cut(f.name, 40), size: f.size }));
   let s = JSON.stringify(o); if (s.length > 3800) { ['concernText', 'extraText', 'histText'].forEach(k => { o[k] = cut(o[k], 150); }); o.asks = o.asks.map(a => cut(a, 80)); s = JSON.stringify(o); } return s; }
 async function pushRemote(p) { if (DB) { const r = await fetch(`${DB}/rooms/${ROOM}/${p.id}.json`, { method: 'PUT', body: slim(p) }); if (!r.ok) throw new Error('db ' + r.status); return; }
   const r = await fetch(NTFY + ROOM, { method: 'POST', body: slim(p) }); if (!r.ok) throw new Error('http ' + r.status); }
@@ -954,6 +997,7 @@ setInterval(() => { if (view === 'doctor' && isAdmin()) pollRemote(); trySync();
 addEventListener('online', () => { trySync(); if (view === 'doctor') pollRemote(); });
 
 let delArm = '';
+let DV = lsGet('pc_dv') || 'all';
 function settingsHtml() {
   return `<div class="lm"><div class="mono muted">STORAGE</div><h2>Storage and delete</h2>
     <p class="sub"><b>${DB ? 'Permanent storage is on.' : 'Temporary storage.'}</b> ${DB ? 'Summaries stay in your database until you delete them.' : 'Summaries are kept about 12 hours on the free relay and then disappear. Add a Firebase database URL below to keep them permanently.'}</p>
@@ -962,28 +1006,29 @@ function settingsHtml() {
     <p class="sub">Room: <b>${esc(ROOM)}</b> · ${INBOX.length} summar${INBOX.length === 1 ? 'y' : 'ies'} stored</p></div>`;
 }
 /* ---------------- customer link maker (doctor/admin) ---------------- */
-const LM = { n: '', p: '', t: '6:00 AM', a: '', l: 'en', g: '' };
+const LM = { n: '', p: '', t: '6:00 AM', a: '', l: 'en', g: '', d: 'sharma' };
 const lmBase = () => location.origin !== 'null' && location.protocol !== 'file:' ? location.origin + location.pathname : 'https://YOUR-NAME.github.io/preconsult/';
-function lmLink() { const q = new URLSearchParams(); if (DB) q.set('db', DB); if (LM.n.trim()) q.set('n', LM.n.trim()); if (LM.p) q.set('p', LM.p); if (LM.t.trim()) q.set('t', LM.t.trim()); if (LM.a) q.set('a', LM.a); if (LM.g) q.set('g', LM.g); if (LM.l !== 'en') q.set('l', LM.l); if (DB && !DB_BAKED) q.set('db', DB); return lmBase() + '?' + q.toString(); }
-function lmMsg() { return `Hi${LM.n.trim() ? ' ' + LM.n.trim() : ''}, your appointment with Dr. Sharma at Sunrise Clinic is today at ${LM.t.trim() || '6:00 AM'}. Please fill this short form (about 3 minutes) before you come: ${lmLink()}`; }
+function lmLink() { const q = new URLSearchParams(); if (DB) q.set('db', DB); if (LM.n.trim()) q.set('n', LM.n.trim()); if (LM.p) q.set('p', LM.p); if (LM.t.trim()) q.set('t', LM.t.trim()); if (LM.a) q.set('a', LM.a); if (LM.g) q.set('g', LM.g); if (LM.d !== 'sharma') q.set('d', LM.d); if (LM.l !== 'en') q.set('l', LM.l); if (DB && !DB_BAKED) q.set('db', DB); return lmBase() + '?' + q.toString(); }
+function lmMsg() { return `Hi${LM.n.trim() ? ' ' + LM.n.trim() : ''}, your appointment with ${docOf(LM.d).name} (${docOf(LM.d).spec}) at Sunrise Clinic is today at ${LM.t.trim() || '6:00 AM'}. Please fill this short form (about 3 minutes) before you come: ${lmLink()}`; }
 function linkMakerHtml() {
   const f = (k, label, ph, extra = '') => `<div class="fld"><label>${label}</label><input class="inp" data-lm="${k}" value="${esc(LM[k])}" placeholder="${ph}" ${extra} autocomplete="off"></div>`;
   return `<div class="lm"><div class="mono muted">CUSTOMER LINK</div><h2>Send a personal link</h2><p class="sub">Type the guest's details. The link opens the app with their name and number already filled in. Send it from your own WhatsApp or SMS.</p>
     <div class="g2">${f('n', 'Name', 'Ravi')}${f('p', 'Mobile (10 digits)', '98XXXXXXXX', 'inputmode="tel" maxlength="10"')}${f('t', 'Appointment time', '6:00 AM')}${f('a', 'Age (optional)', '34', 'inputmode="numeric" maxlength="3"')}
       <div class="fld"><label>Language</label><select data-lm="l">${LANGS.map(l => `<option value="${l.id}" ${LM.l === l.id ? 'selected' : ''}>${esc(l.native)} · ${esc(l.en)}</option>`).join('')}</select></div>
+      <div class="fld" style="grid-column:1/-1"><label>Doctor</label><select data-lm="d">${DOCTORS.map(d => `<option value="${d.id}" ${LM.d === d.id ? 'selected' : ''}>${d.name} · ${d.spec}</option>`).join('')}</select></div>
       <div class="fld"><label>Gender (optional)</label><select data-lm="g">${[['', '—'], ['f', 'Female'], ['m', 'Male'], ['o', 'Other']].map(o => `<option value="${o[0]}" ${LM.g === o[0] ? 'selected' : ''}>${o[1]}</option>`).join('')}</select></div></div>
     <div class="fld"><label>Message preview</label><textarea id="lmMsg" rows="4" readonly>${esc(lmMsg())}</textarea></div>
     <div class="row"><button class="p" data-act="lm-wa">Open in WhatsApp</button><button data-act="lm-sms">Open in SMS</button><button data-act="lm-copy-msg">Copy message</button><button data-act="lm-copy-link">Copy link</button><button data-act="lm-open">Test link</button></div>
     ${location.protocol === 'file:' ? '<p class="sub" style="color:var(--alert)">This file is opened from your computer, so the link shows a placeholder address. Open the deployed website to get a working link.</p>' : ''}</div>`;
 }
 $('#dapp').addEventListener('input', e => { const k = e.target.dataset.lm; if (!k) return; let v = e.target.value; if (k === 'p') { v = v.replace(/\D/g, ''); e.target.value = v; } if (k === 'a') { v = v.replace(/\D/g, ''); e.target.value = v; } LM[k] = v; const m = $('#lmMsg'); if (m) m.value = lmMsg(); });
-$('#dapp').addEventListener('change', e => { const k = e.target.dataset.lm; if (!k || e.target.tagName !== 'SELECT') return; LM[k] = e.target.value; const m = $('#lmMsg'); if (m) m.value = lmMsg(); });
+$('#dapp').addEventListener('change', e => { if (e.target.dataset.dsel) { DV = e.target.value; lsSet('pc_dv', DV); pick = ''; return renderDoctor(); } const k = e.target.dataset.lm; if (!k || e.target.tagName !== 'SELECT') return; LM[k] = e.target.value; const m = $('#lmMsg'); if (m) m.value = lmMsg(); });
 
 /* ---------------- doctor view ---------------- */
 const initials = n => n.trim().split(/\s+/).map(x => x[0]).join('').slice(0, 2).toUpperCase();
 function renderDoctor() {
-  const inbox = INBOX.slice().sort((a, b) => (b.sentAt || 0) - (a.sentAt || 0));
-  const all = [...(inbox.length ? inbox.map(p => [p.id, p]) : [['live', null]]), ['priya', { ...SAMPLES.priya, reviewed: !!revMap.priya }], ['mohan', { ...SAMPLES.mohan, reviewed: !!revMap.mohan }]];
+  const inbox = INBOX.filter(x => DV === 'all' || (x.doc || 'sharma') === DV).slice().sort((a, b) => (b.sentAt || 0) - (a.sentAt || 0));
+  const all = [...(inbox.length ? inbox.map(p => [p.id, p]) : [['live', null]]), ...(DV === 'all' || DV === 'sharma' ? [['priya', { ...SAMPLES.priya, reviewed: !!revMap.priya }], ['mohan', { ...SAMPLES.mohan, reviewed: !!revMap.mohan }]] : [])];
   if (pick !== 'linkmaker' && pick !== 'settings' && !all.some(a => a[0] === pick)) pick = all[0][0];
   const q = all.map(([id, p]) => {
     if (!p) return `<button class="qi" data-act="dpick" data-id="live" aria-current="${pick === 'live'}"><div class="top"><span class="av">A</span><b>Patient A</b><span class="tag">Waiting</span></div><p>No summary yet. Open the patient app and send one.</p></button>`;
@@ -1017,7 +1062,7 @@ function renderDoctor() {
       </div></div>
       <div class="dnote">Built from the patient's own selections and typed words, using simple rules. No AI. Flags are demo rules, not medical advice; typed text is scanned for a few English keywords only and shown exactly as written (${esc(s.lang)}). Records shown as demo are samples; PDF names only, files are not uploaded.</div>`;
   }
-  $('#dapp').innerHTML = `<aside class="q"><div class="brand">Sunrise Clinic</div><div class="mono muted" style="margin-top:-6px">DR. SHARMA · ENT · TODAY</div><div class="livel${syncOk ? '' : ' off'}"><i></i>${syncOk ? 'LIVE · ' + esc(syncAt) : 'OFFLINE · retrying'}</div><div class="mono muted" style="margin-top:8px">QUEUE · ${all.length}</div>${q}<div class="qside"><button data-act="d-link">Create customer link</button><button data-act="d-theme">${isDark() ? 'Switch to light mode' : 'Switch to dark mode'}</button><button data-act="d-set">Storage and delete</button><button data-act="d-exit">Patient app</button><button data-act="d-out">Sign out</button></div></aside><section class="sm" id="smain">${main}</section>`;
+  $('#dapp').innerHTML = `<aside class="q"><div class="brand">Sunrise Clinic</div><div class="fld" style="margin-top:-2px"><label class="mono muted" style="font:500 11px var(--fm);letter-spacing:.06em">DOCTOR · TODAY</label><select class="inp" data-dsel="1" style="height:42px;font-size:15px;font-weight:600"><option value="all" ${DV === 'all' ? 'selected' : ''}>All doctors</option>${DOCTORS.map(d => `<option value="${d.id}" ${DV === d.id ? 'selected' : ''}>${d.name} · ${d.spec}</option>`).join('')}</select></div><div class="livel${syncOk ? '' : ' off'}"><i></i>${syncOk ? 'LIVE · ' + esc(syncAt) : 'OFFLINE · retrying'}</div><div class="mono muted" style="margin-top:8px">QUEUE · ${all.length}</div>${q}<div class="qside"><button data-act="d-link">Create customer link</button><button data-act="d-theme">${isDark() ? 'Switch to light mode' : 'Switch to dark mode'}</button><button data-act="d-set">Storage and delete</button><button data-act="d-exit">Patient app</button><button data-act="d-out">Sign out</button></div></aside><section class="sm" id="smain">${main}</section>`;
 }
 $('#dapp').addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el) return; let a = el.dataset.act;
@@ -1048,7 +1093,7 @@ function toast(m) { const el = $('#toast'); el.textContent = m; el.classList.add
 /* ---------------- sample data + shell ---------------- */
 function fillSample() {
   Object.assign(S, { name: 'Ravi', age: '34', gender: 'm', concern: ['ear'], concernText: 'Blocked feeling in my left ear and some pain', since: 'few', sev: 6, trend: 'same', extra: ['hearing', 'fullear'], extraText: 'Mild cough, itching in throat at night',
-    hist: ['diabetes', 'bp', 'allergy', 'meds'], histAllergy: 'Penicillin', histMeds: 'Metformin 500 mg', histSurgery: '', histText: '', asks: ['Is it safe to travel next week?'], t0: Date.now() - 187000, helper: false, helperOk: false, editing: false });
+    hist: ['diabetes', 'bp', 'allergy'], histAllergy: 'Penicillin', histMeds: '', medsAns: 'reg', medsKinds: ['sugar', 'bp'], medsText: 'Metformin 500 mg', histSurgery: '', histText: '', asks: ['Is it safe to travel next week?'], t0: Date.now() - 187000, helper: false, helperOk: false, editing: false });
 }
 function setView(v) { if (v === 'doctor' && !isAdmin()) { v = 'patient'; LG.err = ''; sheet = 'login'; } view = v; lsSet(VKEY, v); if (v === 'doctor') { renderDoctor(); pollRemote(); } else renderPatient(false); layout(); }
 function setTheme(p) { themePref = p; lsSet(TKEY, p); applyTheme(); renderPatient(false); if (view === 'doctor') renderDoctor(); }
