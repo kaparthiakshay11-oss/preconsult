@@ -905,7 +905,7 @@ function summarize(p) {
   const dur = p.since ? { today: 'since today', few: 'for a few days', week: 'for about a week', long: 'for more than a week', unsure: 'for an unknown duration' }[p.since] : null;
   const trendP = p.trend ? { better: 'getting better', same: 'about the same', worse: 'getting worse' }[p.trend] : null;
   const rewrite = (chips.length || own ? `Reports ${chips.join(', ') || 'a complaint (see own words)'}` : 'Main complaint not given')
-    + (dur ? ' ' + dur : '') + (p.sev ? `, severity ${p.sev}/10` : '') + (trendP ? `, ${trendP}` : '') + '.';
+    + (dur ? ' ' + dur : '') + (p.sev ? `, rated ${11 - p.sev}/10 (1 = worst, 10 = no problem)` : '') + (trendP ? `, ${trendP}` : '') + '.';
   const flags = [];
   const h = p.hist || [];
   if (h.includes('diabetes')) flags.push('Diabetes');
@@ -916,7 +916,7 @@ function summarize(p) {
   const mYes = p.medsAns === 'reg' || p.medsAns === 'prob' || h.includes('meds');
   const mKinds = (p.medsKinds || []).map(k => en('medsKinds', k));
   if (mYes) flags.push('On medicines' + (p.medsAns === 'prob' ? ' (for this problem)' : '') + ': ' + ([mKinds.join(', '), (p.medsText || p.histMeds || '').trim()].filter(Boolean).join(' · ') || 'not listed'));
-  if (p.sev >= 8) flags.push(`Severity ${p.sev}/10`);
+  if (p.sev >= 8) flags.push(`Rated ${11 - p.sev}/10 (1 = worst)`);
   (p.extra || []).forEach(k => { if (RED[k]) flags.push(RED[k]); });
   const typed = [p.concernText, p.extraText, p.histText, ...(p.asks || [])].join(' ').toLowerCase();
   const hit = WORDS.filter(w => typed.includes(w)); if (hit.length) flags.push('Typed text mentions: ' + hit.join(', '));
@@ -940,7 +940,7 @@ function summarize(p) {
   s.text = [`PRE-VISIT SUMMARY — ${s.title}`, s.meta, '',
     flags.length ? 'CRITICAL FLAGS: ' + flags.join('; ') : 'CRITICAL FLAGS: none reported', '',
     'MAIN CONCERN: ' + (own ? `“${own}” ` : '') + rewrite,
-    'DURATION / SEVERITY: ' + ([dur, p.sev ? p.sev + '/10' : null, trendP].filter(Boolean).join(', ') || 'not given'),
+    'DURATION / SEVERITY: ' + ([dur, p.sev ? (11 - p.sev) + '/10 (1 = worst, 10 = no problem)' : null, trendP].filter(Boolean).join(', ') || 'not given'),
     'ALSO NOTICED: ' + ([...also, s.alsoText ? `“${s.alsoText}”` : ''].filter(Boolean).join('; ') || 'nothing'),
     'OLDER RECORDS: ' + (s.records.join('; ') || 'none'),
     'OTHER HISTORY: ' + (other.join('; ') || 'nothing'),
@@ -1046,7 +1046,7 @@ function renderDoctor() {
       <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button class="btn p" data-act="d-to-patient">Open patient app</button><button class="btn s" data-act="d-fill">Fill sample answers</button></div></div>`;
   } else {
     const p = cur[1], s = summarize(p);
-    const sevBar = p.sev ? `<div style="display:flex;align-items:center;gap:14px"><div class="sevbar">${Array.from({ length: 10 }, (_, i) => `<i class="${i < p.sev ? 'on' : ''}"></i>`).join('')}</div><b class="mono" style="font-size:14px;color:var(--ink)">${p.sev}/10</b></div>` : '';
+    const sevBar = p.sev ? `<div style="display:flex;align-items:center;gap:14px"><div class="sevbar">${Array.from({ length: 10 }, (_, i) => `<i class="${i < 11 - p.sev ? 'on' : ''}"></i>`).join('')}</div><b class="mono" style="font-size:14px;color:var(--ink)">${11 - p.sev}/10</b><span class="muted" style="font-size:13px">1 = worst, 10 = no problem</span></div>` : '';
     const chipsOf = a => a.length ? `<div class="chips">${a.map(x => `<span>${esc(x)}</span>`).join('')}</div>` : '';
     main = `<div class="dh"><div><div class="mono">PRE-VISIT SUMMARY</div><h2>${esc(s.title)}</h2><small>${esc(s.meta)}</small></div>
       <div class="acts"><button class="dbtn" data-act="d-copy">${IC.copy}Copy</button><button class="dbtn" data-act="d-print">${IC.print}Print</button>${INBOX.some(x => x.id === pick) ? `<button class="dbtn" data-act="d-del" style="${delArm === pick ? 'background:var(--alert);color:var(--on-alert);border-color:var(--alert)' : ''}">${delArm === pick ? 'Tap again to delete' : 'Delete'}</button>` : ''}<button class="dbtn p" data-act="d-read">${IC.check}${p.reviewed ? 'Marked read' : 'Mark as read'}</button></div></div>
