@@ -277,6 +277,8 @@ body.real .pbar{display:none}
 body.real .dapp{inset:0}
 body.real #stage{background:var(--bg)}
 body.real .phone.real{box-shadow:none}
+.qdel{align-self:flex-end;margin:-6px 4px 4px 0;padding:6px 12px;border-radius:8px;border:1.5px solid var(--alert);color:var(--alert);background:transparent;font:600 12px var(--fb)}
+.qdel.arm{background:var(--alert);color:var(--on-alert)}
 
 </style>
 </head>
@@ -982,7 +984,7 @@ function renderDoctor() {
     if (!p) return `<button class="qi" data-act="dpick" data-id="live" aria-current="${pick === 'live'}"><div class="top"><span class="av">A</span><b>Patient A</b><span class="tag">Waiting</span></div><p>No summary yet. Open the patient app and send one.</p></button>`;
     const s = summarize(p);
     return `<button class="qi" data-act="dpick" data-id="${id}" aria-current="${pick === id}"><div class="top"><span class="av">${esc(initials(s.name))}</span><b>${esc(s.title)}</b>${p.reviewed ? `<span class="tag ok">${IC.check}Read</span>` : `<span class="tag hi">New</span>`}</div>
-      <p>${esc(s.quote || s.rewrite)}</p><div style="display:flex;gap:6px;flex-wrap:wrap">${s.flags.length ? `<span class="tag al">${IC.alert}${s.flags.length} flag${s.flags.length > 1 ? 's' : ''}</span>` : ''}<span class="tag">${esc(s.lang)}</span></div></button>`;
+      <p>${esc(s.quote || s.rewrite)}</p><div style="display:flex;gap:6px;flex-wrap:wrap">${s.flags.length ? `<span class="tag al">${IC.alert}${s.flags.length} flag${s.flags.length > 1 ? 's' : ''}</span>` : ''}<span class="tag">${esc(s.lang)}</span></div></button>${INBOX.some(x => x.id === id) ? `<button class="qdel${delArm === id ? ' arm' : ''}" data-act="d-del-id" data-id="${id}">${delArm === id ? 'Tap again to delete' : 'Delete'}</button>` : ''}`;
   }).join('');
   let main = '';
   const cur = all.find(a => a[0] === pick) || all[0];
@@ -1013,11 +1015,12 @@ function renderDoctor() {
   $('#dapp').innerHTML = `<aside class="q"><div class="brand">Sunrise Clinic</div><div class="mono muted" style="margin-top:-6px">DR. SHARMA · ENT · TODAY</div><div class="livel${syncOk ? '' : ' off'}"><i></i>${syncOk ? 'LIVE · ' + esc(syncAt) : 'OFFLINE · retrying'}</div><div class="mono muted" style="margin-top:8px">QUEUE · ${all.length}</div>${q}<div class="qside"><button data-act="d-link">Create customer link</button><button data-act="d-theme">${isDark() ? 'Switch to light mode' : 'Switch to dark mode'}</button><button data-act="d-set">Storage and delete</button><button data-act="d-exit">Patient app</button><button data-act="d-out">Sign out</button></div></aside><section class="sm" id="smain">${main}</section>`;
 }
 $('#dapp').addEventListener('click', e => {
-  const el = e.target.closest('[data-act]'); if (!el) return; const a = el.dataset.act;
+  const el = e.target.closest('[data-act]'); if (!el) return; let a = el.dataset.act;
   if (a === 'dpick') { pick = el.dataset.id; return renderDoctor(); }
   if (a === 'd-to-patient' || a === 'd-exit') return setView('patient');
   if (a === 'd-out') { lsDel('pc_admin'); return setView('patient'); }
   if (a === 'd-set') { pick = 'settings'; return renderDoctor(); }
+  if (a === 'd-del-id') { pick = el.dataset.id; a = 'd-del'; }
   if (a === 'd-del') { if (delArm !== pick) { delArm = pick; setTimeout(() => { delArm = ''; if (view === 'doctor') renderDoctor(); }, 3000); return renderDoctor(); } const id = pick; delArm = ''; tomb([id]); INBOX = INBOX.filter(x => x.id !== id); saveInbox(); deleteRemote(id); pick = ''; toast('Summary deleted'); return renderDoctor(); }
   if (a === 'd-delall') { if (delArm !== 'all') { delArm = 'all'; setTimeout(() => { delArm = ''; if (view === 'doctor' && pick === 'settings') renderDoctor(); }, 3000); return renderDoctor(); } delArm = ''; const ids = INBOX.map(x => x.id); tomb(ids); INBOX = []; saveInbox(); ids.forEach(deleteRemote); toast('All summaries deleted'); return renderDoctor(); }
   if (a === 'd-dbsave') { const v = ($('#dbUrl').value || '').trim(); if (v && !/^https:\/\//.test(v)) { toast('Must start with https://'); return; } lsSet('pc_db', v); toast('Saved. Reloading'); setTimeout(() => location.reload(), 600); return; }
