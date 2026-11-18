@@ -534,6 +534,11 @@ const D3 = {
   pv3: ["In this demo, your answers go only to the clinic's demo screen. Please use sample details, not real health information.", "इस डेमो में आपके जवाब सिर्फ क्लिनिक की डेमो स्क्रीन पर जाते हैं। कृपया असली स्वास्थ्य जानकारी नहीं, नमूना जानकारी भरें।", "ఈ డెమోలో మీ సమాధానాలు క్లినిక్ డెమో స్క్రీన్‌కు మాత్రమే వెళ్తాయి. దయచేసి నిజమైన ఆరోగ్య వివరాలు కాకుండా నమూనా వివరాలు ఇవ్వండి.", "இந்த டெமோவில் உங்கள் பதில்கள் கிளினிக்கின் டெமோ திரைக்கு மட்டுமே செல்லும். உண்மையான உடல்நல விவரங்களுக்குப் பதிலாக மாதிரி விவரங்களை உள்ளிடுங்கள்.", "ಈ ಡೆಮೊದಲ್ಲಿ ನಿಮ್ಮ ಉತ್ತರಗಳು ಕ್ಲಿನಿಕ್‌ನ ಡೆಮೊ ಪರದೆಗೆ ಮಾತ್ರ ಹೋಗುತ್ತವೆ. ದಯವಿಟ್ಟು ನಿಜವಾದ ಆರೋಗ್ಯ ಮಾಹಿತಿಯ ಬದಲು ಮಾದರಿ ವಿವರಗಳನ್ನು ನೀಡಿ.", "ഈ ഡെമോയിൽ നിങ്ങളുടെ ഉത്തരങ്ങൾ ക്ലിനിക്കിന്റെ ഡെമോ സ്ക്രീനിലേക്ക് മാത്രമേ പോകൂ. യഥാർത്ഥ ആരോഗ്യ വിവരങ്ങൾക്കു പകരം സാമ്പിൾ വിവരങ്ങൾ നൽകുക."],
 };
 for (const k in D3) { if (!I[k]) I[k] = {}; LI.forEach((l, i) => { if (D3[k][i] != null) I[k][l] = D3[k][i]; }); }
+const D4 = {
+  s_sev: ["1 is the worst you can imagine. 10 is no problem at all.", "1 मतलब सबसे ज़्यादा तकलीफ़। 10 मतलब कोई तकलीफ़ नहीं।", "1 అంటే ఊహించగలిగినంత ఎక్కువ బాధ. 10 అంటే అసలు సమస్య లేదు.", "1 என்றால் தாங்க முடியாதது. 10 என்றால் எந்தப் பிரச்சனையும் இல்லை.", "1 ಎಂದರೆ ಊಹಿಸಬಹುದಾದ ಅತಿ ಹೆಚ್ಚು ತೊಂದರೆ. 10 ಎಂದರೆ ಯಾವ ತೊಂದರೆಯೂ ಇಲ್ಲ.", "1 എന്നാൽ സഹിക്കാനാവാത്തത്. 10 എന്നാൽ ഒരു പ്രശ്നവുമില്ല."],
+  h_s_sev: ["1 is the worst {s} can imagine. 10 is no problem at all.", null, null, null, null, null],
+};
+for (const k in D4) { if (!I[k]) I[k] = {}; LI.forEach((l, i) => { if (D4[k][i] != null) I[k][l] = D4[k][i]; }); }
 
 (() => {
 const $ = (s, r = document) => r.querySelector(s);
@@ -704,9 +709,9 @@ function scrSince() {
   return `<div class="scr">${header('since')}<div class="body">${head(t('e_q', { n: 1 }), t('t_since'), t('s_since'))}${singleHtml(SINCE, 'since')}</div>${foot(btnNext(S.since == null), btnSkip())}</div>`;
 }
 function scrSev() {
-  let g = ''; for (let i = 1; i <= 10; i++) g += `<button class="sevb" aria-pressed="${S.sev === i}" data-act="pick" data-grp="sev" data-v="${i}">${i}</button>`;
+  let g = ''; for (let i = 1; i <= 10; i++) g += `<button class="sevb" aria-pressed="${S.sev === 11 - i}" data-act="pick" data-grp="sev" data-v="${11 - i}">${i}</button>`;
   return `<div class="scr">${header('sev')}<div class="body">${head(t('e_q', { n: 2 }), t('t_sev'), t('s_sev'))}<div class="sevg">${g}</div>
-    <div class="sevl mono"><span>1 · ${esc(t('sev_lo'))}</span><span>10 · ${esc(t('sev_hi'))}</span></div></div>${foot(btnNext(S.sev == null), btnSkip())}</div>`;
+    <div class="sevl mono"><span>1 · ${esc(t('sev_hi'))}</span><span>10 · ${esc(t('sev_lo'))}</span></div></div>${foot(btnNext(S.sev == null), btnSkip())}</div>`;
 }
 function scrTrend() {
   return `<div class="scr">${header('trend')}<div class="body">${head(t('e_q', { n: 3 }), t('t_trend'), t('s_trend'))}${singleHtml(TREND, 'trend')}</div>${foot(btnNext(S.trend == null), btnSkip())}</div>`;
@@ -737,7 +742,7 @@ function listText(grp) { return S[grp].map(k => lab(grp, k)).join(', '); }
 function reviewRows() {
   const none = `<span class="skip">${esc(t('none'))}</span>`;
   const main = [listText('concern'), S.concernText.trim() ? '“' + S.concernText.trim() + '”' : ''].filter(Boolean).join('\n');
-  const how = [S.since ? lab('since', S.since) : '', S.sev ? S.sev + '/10' : '', S.trend ? lab('trend', S.trend) : ''].filter(Boolean).join(' · ');
+  const how = [S.since ? lab('since', S.since) : '', S.sev ? (11 - S.sev) + '/10' : '', S.trend ? lab('trend', S.trend) : ''].filter(Boolean).join(' · ');
   const also = [listText('extra'), S.extraText.trim()].filter(Boolean).join('\n');
   const hl = S.hist.map(k => { let x = lab('hist', k); const d = { allergy: S.histAllergy, meds: S.histMeds, surgery: S.histSurgery }[k]; return d && d.trim() ? x + ': ' + d.trim() : x; });
   if (S.histText.trim()) hl.push(S.histText.trim());
