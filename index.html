@@ -528,6 +528,7 @@ const D3 = {
   abha_ph: ["14-digit ABHA ID", "14 अंकों की ABHA आईडी", "14 అంకెల ABHA ఐడీ", "14 இலக்க ABHA ஐடி", "14 ಅಂಕಿಯ ABHA ಐಡಿ", "14 അക്ക ABHA ഐഡി"],
   rec_demo: ["Demo: sample records only. Nothing real is fetched.", "डेमो: सिर्फ नमूना रिकॉर्ड, असली कुछ नहीं लाया जाता।", "డెమో: నమూనా రికార్డులు మాత్రమే, నిజమైనవి ఏవీ తేవడం లేదు.", "டெமோ: மாதிரி பதிவுகள் மட்டுமே, உண்மையானவை எதுவும் எடுக்கப்படாது.", "ಡೆಮೊ: ಮಾದರಿ ದಾಖಲೆಗಳು ಮಾತ್ರ, ನಿಜವಾದದ್ದು ಏನೂ ತರುವುದಿಲ್ಲ.", "ഡെമോ: സാമ്പിൾ രേഖകൾ മാത്രം, യഥാർത്ഥമായി ഒന്നും എടുക്കുന്നില്ല."],
   rec_remove: ["Remove", "हटाएँ", "తొలగించు", "நீக்கு", "ತೆಗೆಯಿರಿ", "നീക്കുക"],
+  hi_plain: ["Hello", "नमस्ते", "నమస్కారం", "வணக்கம்", "ನಮಸ್ಕಾರ", "നമസ്കാരം"],
   hi_name: ["Hi, {n}", "नमस्ते, {n}", "నమస్కారం, {n}", "வணக்கம், {n}", "ನಮಸ್ಕಾರ, {n}", "നമസ്കാരം, {n}"],
   sync_ok: ["SENT TO THE CLINIC SCREEN", "क्लिनिक की स्क्रीन पर भेज दिया", "క్లినిక్ స్క్రీన్‌కు పంపబడింది", "கிளினிக் திரைக்கு அனுப்பப்பட்டது", "ಕ್ಲಿನಿಕ್ ಪರದೆಗೆ ಕಳುಹಿಸಲಾಗಿದೆ", "ക്ലിനിക് സ്ക്രീനിലേക്ക് അയച്ചു"],
   sync_wait: ["SAVED HERE · SENDS WHEN ONLINE", "यहाँ सेव है · नेट आने पर भेजेगा", "ఇక్కడ సేవ్ అయింది · ఆన్‌లైన్ రాగానే పంపబడుతుంది", "இங்கே சேமிக்கப்பட்டது · இணையம் வந்ததும் அனுப்பப்படும்", "ಇಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ · ಆನ್‌ಲೈನ್ ಬಂದಾಗ ಕಳುಹಿಸುತ್ತದೆ", "ഇവിടെ സേവ് ചെയ്തു · ഓൺലൈൻ ആകുമ്പോൾ അയയ്ക്കും"],
@@ -582,7 +583,7 @@ const DOCTORS = [{ id: 'sharma', name: 'Dr. Sharma', spec: 'ENT' }, { id: 'rao',
 const docOf = id => DOCTORS.find(d => d.id === id) || DOCTORS[0];
 let sheet = null;
 /* prefilled customer link: ?n=Ravi&p=9876543210&t=6:00%20AM&a=34&g=m&l=te */
-(() => { const q = new URLSearchParams(location.search); if (!(q.get('n') || q.get('p') || q.get('t'))) return;
+(() => { const q = new URLSearchParams(location.search); if (!(q.get('n') || q.get('p') || q.get('t'))) { if (S.linked || lsGet('pc_link')) { S = fresh(S.lang); lsDel('pc_link'); save(); } return; }
   if (lsGet('pc_link') === location.search) return;
   const l = ['en', 'hi', 'te', 'ta', 'kn', 'ml'].includes(q.get('l')) ? q.get('l') : S.lang;
   S = fresh(l); S.name = (q.get('n') || '').slice(0, 40); S.phone = (q.get('p') || '').replace(/\D/g, '').slice(-10); S.age = (q.get('a') || '').replace(/\D/g, '').slice(0, 3);
@@ -688,7 +689,7 @@ function scrWelcome() {
     <div class="topline"><span class="brand">Sunrise Clinic</span>
       <button class="pill" data-act="sheet" data-v="lang" aria-label="${esc(t('pick_lang'))}">${IC.globe}${esc(L.native)}</button>
       <button class="pill" data-act="theme-in" aria-label="theme">${isDark() ? IC.sun : IC.moon}</button></div>
-    ${S.linked && S.name ? `<div class="hello">${esc(t('hi_name', { n: S.name }))}</div>` : ''}<div class="head"><div class="mono muted">${esc(t('w_eyebrow'))}</div><h1 class="t big">${rich(t('w_title'))}</h1><p class="sub">${esc(t('w_sub'))}</p></div>
+    <div class="hello">${esc(S.linked && S.name ? t('hi_name', { n: S.name }) : t('hi_plain'))}</div><div class="head"><div class="mono muted">${esc(t('w_eyebrow'))}</div><h1 class="t big">${rich(t('w_title'))}</h1><p class="sub">${esc(t('w_sub'))}</p></div>
     <div class="tk"><span class="stickr">${esc(t('sticker'))}</span>
       <div class="mono muted">${esc(t('appt'))}</div>
       <div class="r"><div class="big">${esc(t('today_time'))}</div><div class="who">${esc(t('dr'))}<small>${esc(t('spec'))}</small></div></div>
