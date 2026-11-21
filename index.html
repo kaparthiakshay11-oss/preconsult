@@ -280,6 +280,15 @@ body.real .phone.real{box-shadow:none}
 .qdel{align-self:flex-end;margin:-6px 4px 4px 0;padding:6px 12px;border-radius:8px;border:1.5px solid var(--alert);color:var(--alert);background:transparent;font:600 12px var(--fb)}
 .qdel.arm{background:var(--alert);color:var(--on-alert)}
 
+.tawrap{position:relative}
+.tawrap .ta{padding-bottom:52px}
+.micb{position:absolute;right:10px;bottom:10px;display:flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:99px;border:1.5px solid var(--ink);background:var(--surface);color:var(--ink);font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.micb.on{background:var(--alert);border-color:var(--alert);color:#fff;animation:micp 1.1s ease-in-out infinite}
+.micb.on span{font-size:0}.micb.on span::after{content:'Listening';font-size:12px}
+@keyframes micp{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--alert) 30%,transparent)}}
+.listenb{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:12px;height:34px;padding:0 12px;border-radius:99px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.listenb.on{border-color:var(--primary);color:var(--primary)}
+
 </style>
 </head>
 <body>
@@ -814,6 +823,49 @@ function sheetHtml() {
 
 /* ---------------- render patient ---------------- */
 let dirBack = false;
+
+/* ---------- Voice: dictation into text boxes + read-aloud of the question ---------- */
+const VLANG = { en: 'en-IN', hi: 'hi-IN', te: 'te-IN', ta: 'ta-IN', kn: 'kn-IN', ml: 'ml-IN' };
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, recBtn = null;
+function stopVoice() { if (rec) { try { rec.stop(); } catch (e) { } } if (recBtn) recBtn.classList.remove('on'); rec = null; recBtn = null; }
+function startVoice(ta, btn) {
+  if (rec) { const same = recBtn === btn; stopVoice(); if (same) return; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  const r = new SR(); r.lang = VLANG[S.lang] || 'en-IN'; r.interimResults = true; r.continuous = true;
+  const base = ta.value ? ta.value.replace(/\s+$/, '') + ' ' : '';
+  let fin = '';
+  r.onresult = ev => {
+    let interim = ''; fin = '';
+    for (let i = 0; i < ev.results.length; i++) { const tx = ev.results[i][0].transcript; if (ev.results[i].isFinal) fin += tx; else interim += tx; }
+    ta.value = base + fin + interim; ta.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  r.onerror = ev => { stopVoice(); toast(ev.error === 'not-allowed' ? 'Allow the microphone to use voice' : ev.error === 'no-speech' ? 'Did not hear anything. Try again' : 'Voice is not available right now'); };
+  r.onend = () => { if (rec === r) stopVoice(); };
+  try { r.start(); rec = r; recBtn = btn; btn.classList.add('on'); } catch (e) { toast('Voice is not available right now'); }
+}
+function voiceDecorate(app) {
+  stopVoice();
+  if (SR) app.querySelectorAll('textarea.ta[data-bind]').forEach(ta => {
+    const w = document.createElement('div'); w.className = 'tawrap'; ta.parentNode.insertBefore(w, ta); w.appendChild(ta);
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'micb'; b.setAttribute('aria-label', 'Speak your answer');
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span class="mono">Speak</span>';
+    b.addEventListener('click', e => { e.preventDefault(); startVoice(ta, b); });
+    w.appendChild(b);
+  });
+  const hd = app.querySelector('.head');
+  if (hd && window.speechSynthesis && window.SpeechSynthesisUtterance) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'listenb mono'; b.setAttribute('aria-label', 'Listen to this question');
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg> Listen';
+    b.addEventListener('click', () => {
+      if (speechSynthesis.speaking) { speechSynthesis.cancel(); b.classList.remove('on'); return; }
+      stopVoice();
+      const u = new SpeechSynthesisUtterance(((hd.querySelector('.t') || {}).textContent || '') + '. ' + ((hd.querySelector('.sub') || {}).textContent || ''));
+      u.lang = VLANG[S.lang] || 'en-IN'; u.onend = u.onerror = () => b.classList.remove('on'); b.classList.add('on'); speechSynthesis.speak(u);
+    });
+    hd.appendChild(b);
+  }
+}
 function renderPatient(animate = true) {
   document.documentElement.lang = S.lang;
   document.body.classList.toggle('indic', S.lang !== 'en');
@@ -822,6 +874,7 @@ function renderPatient(animate = true) {
   app.innerHTML = SCREENS[S.step]() + sheetHtml();
   const sc = app.querySelector('.scr'); if (sc) { if (!animate) sc.style.animation = 'none'; else if (dirBack) sc.classList.add('back'); }
   if (!animate) { const b = app.querySelector('.body'); if (b) b.scrollTop = keep; }
+  voiceDecorate(app);
 }
 function go(step, back = false) { S.step = step; dirBack = back; save(); renderPatient(true); const b = $('#app .body'); if (b) b.scrollTop = 0; }
 const prevOf = s => (S.editing && s !== 'review' && s !== 'sev' && s !== 'trend') ? 'review' : ORDER[Math.max(0, ORDER.indexOf(s) - 1)];
