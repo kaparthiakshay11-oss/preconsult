@@ -289,6 +289,14 @@ body.real .phone.real{box-shadow:none}
 .listenb{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:12px;height:34px;padding:0 12px;border-radius:99px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
 .listenb.on{border-color:var(--primary);color:var(--primary)}
 
+.bmap{border:1.5px solid var(--line);border-radius:16px;background:var(--surface);padding:14px;display:flex;flex-direction:column;gap:10px}
+.bmc{width:100%;display:block;touch-action:pan-y;cursor:grab;border-radius:10px}
+.bm-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.bm-v{height:34px;padding:0 14px;border-radius:99px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font:600 14px var(--fb);cursor:pointer}
+.bm-v:active{border-color:var(--primary);color:var(--primary)}
+.bm-hint{font-size:12px;letter-spacing:.04em}
+.bm-sel{display:flex;flex-wrap:wrap;gap:8px;min-height:36px;align-items:center}
+
 </style>
 </head>
 <body>
@@ -569,6 +577,305 @@ const D5 = {
   ph_meds: ["Type medicine names (optional)", "दवाओं के नाम लिखें (वैकल्पिक)", "మందుల పేర్లు టైప్ చేయండి (ఐచ్ఛికం)", "மருந்துகளின் பெயர்களைத் தட்டச்சு செய்யுங்கள் (விருப்பம்)", "ಔಷಧಿಗಳ ಹೆಸರು ಟೈಪ್ ಮಾಡಿ (ಐಚ್ಛಿಕ)", "മരുന്നുകളുടെ പേര് ടൈപ്പ് ചെയ്യൂ (ഓപ്ഷണൽ)"],
 };
 for (const k in D5) { if (!I[k]) I[k] = {}; LI.forEach((l, i) => { if (D5[k][i] != null) I[k][l] = D5[k][i]; }); }
+const D6 = {
+ "bm_head_t": [
+  "Where is the headache?",
+  "सिरदर्द कहाँ है?",
+  "తలనొప్పి ఎక్కడ ఉంది?",
+  "தலைவலி எங்கே உள்ளது?",
+  "ತಲೆನೋವು ಎಲ್ಲಿದೆ?",
+  "തലവേദന എവിടെയാണ്?"
+ ],
+ "bm_body_t": [
+  "Where does it hurt?",
+  "दर्द कहाँ है?",
+  "నొప్పి ఎక్కడ ఉంది?",
+  "வலி எங்கே உள்ளது?",
+  "ನೋವು ಎಲ್ಲಿದೆ?",
+  "വേദന എവിടെയാണ്?"
+ ],
+ "bm_hint": [
+  "Swipe to turn. Tap the spot.",
+  "घुमाने के लिए स्वाइप करें। जगह पर टैप करें।",
+  "తిప్పడానికి స్వైప్ చేయండి. చోటును తాకండి.",
+  "திருப்ப ஸ்வைப் செய்யுங்கள். இடத்தைத் தொடுங்கள்.",
+  "ತಿರುಗಿಸಲು ಸ್ವೈಪ್ ಮಾಡಿ. ಜಾಗವನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ.",
+  "തിരിക്കാൻ സ്വൈപ്പ് ചെയ്യൂ. സ്ഥലത്ത് ടാപ്പ് ചെയ്യൂ."
+ ],
+ "bm_front": [
+  "Front",
+  "सामने",
+  "ముందు",
+  "முன்",
+  "ಮುಂದೆ",
+  "മുൻവശം"
+ ],
+ "bm_side": [
+  "Side",
+  "बगल",
+  "పక్క",
+  "பக்கம்",
+  "ಪಕ್ಕ",
+  "വശം"
+ ],
+ "bm_back": [
+  "Back",
+  "पीछे",
+  "వెనుక",
+  "பின்",
+  "ಹಿಂದೆ",
+  "പിൻവശം"
+ ],
+ "bm_none": [
+  "Nothing selected yet",
+  "अभी कुछ चुना नहीं",
+  "ఇంకా ఏదీ ఎంచుకోలేదు",
+  "இன்னும் எதுவும் தேர்வு செய்யவில்லை",
+  "ಇನ್ನೂ ಏನೂ ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ",
+  "ഇതുവരെ ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ല"
+ ],
+ "bm_hl": [
+  "Headache",
+  "सिरदर्द",
+  "తలనొప్పి",
+  "தலைவலி",
+  "ತಲೆನೋವು",
+  "തലവേദന"
+ ],
+ "bm_bl": [
+  "Pain",
+  "दर्द",
+  "నొప్పి",
+  "வலி",
+  "ನೋವು",
+  "വേദന"
+ ],
+ "rg_forehead": [
+  "Forehead",
+  "माथा",
+  "నుదురు",
+  "நெற்றி",
+  "ಹಣೆ",
+  "നെറ്റി"
+ ],
+ "rg_eyes": [
+  "Around the eyes",
+  "आँखों के आसपास",
+  "కళ్ల చుట్టూ",
+  "கண்களைச் சுற்றி",
+  "ಕಣ್ಣುಗಳ ಸುತ್ತ",
+  "കണ്ണുകൾക്ക് ചുറ്റും"
+ ],
+ "rg_templeL": [
+  "Left temple",
+  "बायीं कनपटी",
+  "ఎడమ కణత",
+  "இடது நெற்றிப்பொட்டு",
+  "ಎಡ ಹಣೆಯ ಪಕ್ಕ",
+  "ഇടത് ചെന്നി"
+ ],
+ "rg_templeR": [
+  "Right temple",
+  "दायीं कनपटी",
+  "కుడి కణత",
+  "வலது நெற்றிப்பொட்டு",
+  "ಬಲ ಹಣೆಯ ಪಕ್ಕ",
+  "വലത് ചെന്നി"
+ ],
+ "rg_top": [
+  "Top of head",
+  "सिर का ऊपरी भाग",
+  "నడినెత్తి",
+  "உச்சந்தலை",
+  "ನೆತ್ತಿ",
+  "നെറുക"
+ ],
+ "rg_back": [
+  "Back of head",
+  "सिर का पिछला भाग",
+  "తల వెనుక భాగం",
+  "தலையின் பின்புறம்",
+  "ತಲೆಯ ಹಿಂಭಾಗ",
+  "തലയുടെ പിൻഭാഗം"
+ ],
+ "rg_face": [
+  "Cheeks, nose and jaw",
+  "गाल, नाक और जबड़ा",
+  "చెంపలు, ముక్కు, దవడ",
+  "கன்னம், மூக்கு, தாடை",
+  "ಕೆನ್ನೆ, ಮೂಗು, ದವಡೆ",
+  "കവിൾ, മൂക്ക്, താടിയെല്ല്"
+ ],
+ "rg_neck": [
+  "Neck",
+  "गर्दन",
+  "మెడ",
+  "கழுத்து",
+  "ಕುತ್ತಿಗೆ",
+  "കഴുത്ത്"
+ ],
+ "rg_head": [
+  "Head",
+  "सिर",
+  "తల",
+  "தலை",
+  "ತಲೆ",
+  "തല"
+ ],
+ "rg_shoulderL": [
+  "Left shoulder",
+  "बायाँ कंधा",
+  "ఎడమ భుజం",
+  "இடது தோள்பட்டை",
+  "ಎಡ ಭುಜ",
+  "ഇടത് തോൾ"
+ ],
+ "rg_shoulderR": [
+  "Right shoulder",
+  "दायाँ कंधा",
+  "కుడి భుజం",
+  "வலது தோள்பட்டை",
+  "ಬಲ ಭುಜ",
+  "വലത് തോൾ"
+ ],
+ "rg_chest": [
+  "Chest",
+  "छाती",
+  "ఛాతి",
+  "மார்பு",
+  "ಎದೆ",
+  "നെഞ്ച്"
+ ],
+ "rg_upperback": [
+  "Upper back",
+  "ऊपरी पीठ",
+  "పై వీపు",
+  "மேல் முதுகு",
+  "ಮೇಲಿನ ಬೆನ್ನು",
+  "മുകൾ പുറം"
+ ],
+ "rg_abdomen": [
+  "Abdomen",
+  "पेट",
+  "కడుపు",
+  "வயிறு",
+  "ಹೊಟ್ಟೆ",
+  "വയർ"
+ ],
+ "rg_lowerback": [
+  "Lower back",
+  "कमर (निचली पीठ)",
+  "నడుము (కింది వీపు)",
+  "கீழ் முதுகு",
+  "ಸೊಂಟ (ಕೆಳ ಬೆನ್ನು)",
+  "നടുവ് (താഴത്തെ പുറം)"
+ ],
+ "rg_hips": [
+  "Hips",
+  "कूल्हे",
+  "తుంటి",
+  "இடுப்பு",
+  "ಸೊಂಟದ ಕೆಳಭಾಗ",
+  "ഇടുപ്പ്"
+ ],
+ "rg_armL": [
+  "Left upper arm",
+  "बायीं ऊपरी बाँह",
+  "ఎడమ పై చేయి",
+  "இடது மேல் கை",
+  "ಎಡ ತೋಳು (ಮೇಲ್ಭಾಗ)",
+  "ഇടത് മേൽക്കൈ"
+ ],
+ "rg_armR": [
+  "Right upper arm",
+  "दायीं ऊपरी बाँह",
+  "కుడి పై చేయి",
+  "வலது மேல் கை",
+  "ಬಲ ತೋಳು (ಮೇಲ್ಭಾಗ)",
+  "വലത് മേൽക്കൈ"
+ ],
+ "rg_forearmL": [
+  "Left forearm and hand",
+  "बायाँ हाथ (कोहनी से नीचे)",
+  "ఎడమ ముంజేయి, చేతి",
+  "இடது முன்கை, கை",
+  "ಎಡ ಮುಂಗೈ ಮತ್ತು ಕೈ",
+  "ഇടത് കൈത്തണ്ടയും കൈയും"
+ ],
+ "rg_forearmR": [
+  "Right forearm and hand",
+  "दायाँ हाथ (कोहनी से नीचे)",
+  "కుడి ముంజేయి, చేతి",
+  "வலது முன்கை, கை",
+  "ಬಲ ಮುಂಗೈ ಮತ್ತು ಕೈ",
+  "വലത് കൈത്തണ്ടയും കൈയും"
+ ],
+ "rg_thighL": [
+  "Left thigh",
+  "बायीं जांघ",
+  "ఎడమ తొడ",
+  "இடது தொடை",
+  "ಎಡ ತೊಡೆ",
+  "ഇടത് തുട"
+ ],
+ "rg_thighR": [
+  "Right thigh",
+  "दायीं जांघ",
+  "కుడి తొడ",
+  "வலது தொடை",
+  "ಬಲ ತೊಡೆ",
+  "വലത് തുട"
+ ],
+ "rg_kneeL": [
+  "Left knee",
+  "बायाँ घुटना",
+  "ఎడమ మోకాలు",
+  "இடது முழங்கால்",
+  "ಎಡ ಮೊಣಕಾಲು",
+  "ഇടത് മുട്ട്"
+ ],
+ "rg_kneeR": [
+  "Right knee",
+  "दायाँ घुटना",
+  "కుడి మోకాలు",
+  "வலது முழங்கால்",
+  "ಬಲ ಮೊಣಕಾಲು",
+  "വലത് മുട്ട്"
+ ],
+ "rg_shinL": [
+  "Left lower leg",
+  "बायीं पिंडली",
+  "ఎడమ పిక్క",
+  "இடது கெண்டைக்கால்",
+  "ಎಡ ಕಾಲು (ಮಂಡಿಯ ಕೆಳಗೆ)",
+  "ഇടത് കണങ്കാൽ"
+ ],
+ "rg_shinR": [
+  "Right lower leg",
+  "दायीं पिंडली",
+  "కుడి పిక్క",
+  "வலது கெண்டைக்கால்",
+  "ಬಲ ಕಾಲು (ಮಂಡಿಯ ಕೆಳಗೆ)",
+  "വലത് കണങ്കാൽ"
+ ],
+ "rg_footL": [
+  "Left foot",
+  "बायाँ पैर",
+  "ఎడమ పాదం",
+  "இடது பாதம்",
+  "ಎಡ ಪಾದ",
+  "ഇടത് പാദം"
+ ],
+ "rg_footR": [
+  "Right foot",
+  "दायाँ पैर",
+  "కుడి పాదం",
+  "வலது பாதம்",
+  "ಬಲ ಪಾದ",
+  "വലത് പാദം"
+ ]
+};
+for (const k in D6) { if (!I[k]) I[k] = {}; LI.forEach((l, i) => { if (D6[k][i] != null) I[k][l] = D6[k][i]; }); }
 
 (() => {
 const $ = (s, r = document) => r.querySelector(s);
@@ -580,7 +887,7 @@ const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
 
 /* ---------------- state ---------------- */
 const fresh = (lang = 'en') => ({ lang, step: 'welcome', helper: false, helperOk: false, editing: false, name: '', age: '', gender: '', doc: 'sharma', phone: '', appt: '', linked: false, abha: '', recPhone: false, abhaOk: false, files: [], sid: '', synced: false, concern: [], concernText: '',
-  since: null, sev: null, trend: null, extra: [], extraText: '', hist: [], histAllergy: '', histMeds: '', medsAns: '', medsKinds: [], medsText: '', histSurgery: '', histText: '', asks: [''], t0: null, sent: null, reviewed: false });
+  since: null, sev: null, trend: null, extra: [], extraText: '', hpart: [], bpart: [], hist: [], histAllergy: '', histMeds: '', medsAns: '', medsKinds: [], medsText: '', histSurgery: '', histText: '', asks: [''], t0: null, sent: null, reviewed: false });
 let S;
 try { S = Object.assign(fresh(), JSON.parse(lsGet(KEY) || '{}')); } catch (e) { S = fresh(); }
 const save = () => lsSet(KEY, JSON.stringify(S));
@@ -754,7 +1061,7 @@ function scrTrend() {
 }
 function scrExtra() {
   { const ok = symList(S.concern); S.extra = S.extra.filter(k => ok.includes(k)); }
-  return `<div class="scr">${header('extra')}<div class="body">${head(t('e_extra'), t('t_extra'), t('s_extra'))}${(S.concern.length) ? `<div class="mono muted" style="margin-top:-4px">${esc(t('x_for'))}: <b>${esc(S.concern.map(k => lab('concern', k)).join(' · '))}</b></div>` : ''}${chipsHtml(symList(S.concern), 'extra')}
+  return `<div class="scr">${header('extra')}<div class="body">${head(t('e_extra'), t('t_extra'), t('s_extra'))}${(S.concern.length) ? `<div class="mono muted" style="margin-top:-4px">${esc(t('x_for'))}: <b>${esc(S.concern.map(k => lab('concern', k)).join(' · '))}</b></div>` : ''}${S.concern.includes('headache') ? bmHtml('head') : ''}${S.concern.includes('pain') ? bmHtml('body') : ''}${chipsHtml(symList(S.concern), 'extra')}
     ${ta('extraText', t('ph_extra'), S.extraText)}${why(t('why_extra'))}</div>${foot(btnNext(false))}</div>`;
 }
 function scrHist() {
@@ -785,7 +1092,7 @@ function reviewRows() {
   const none = `<span class="skip">${esc(t('none'))}</span>`;
   const main = [listText('concern'), S.concernText.trim() ? '“' + S.concernText.trim() + '”' : ''].filter(Boolean).join('\n');
   const how = [S.since ? lab('since', S.since) : '', S.sev ? S.sev + '/10' : '', S.trend ? lab('trend', S.trend) : ''].filter(Boolean).join(' · ');
-  const also = [listText('extra'), S.extraText.trim()].filter(Boolean).join('\n');
+  const also = [bmLines(S).join('\n'), listText('extra'), S.extraText.trim()].filter(Boolean).join('\n');
   const hl = S.hist.map(k => { let x = lab('hist', k); const d = { allergy: S.histAllergy, surgery: S.histSurgery }[k]; return d && d.trim() ? x + ': ' + d.trim() : x; });
   if (S.histText.trim()) hl.push(S.histText.trim());
   const asks = S.asks.map(a => a.trim()).filter(Boolean);
@@ -866,6 +1173,139 @@ function voiceDecorate(app) {
     hd.appendChild(b);
   }
 }
+
+/* ---------- 3D body map: rotatable head and whole body, tap to mark where it hurts ---------- */
+const BM_REG = { head: ['forehead', 'eyes', 'templeL', 'templeR', 'top', 'back', 'face', 'neck'], body: ['head', 'neck', 'shoulderL', 'shoulderR', 'chest', 'upperback', 'abdomen', 'lowerback', 'hips', 'armL', 'armR', 'forearmL', 'forearmR', 'thighL', 'thighR', 'kneeL', 'kneeR', 'shinL', 'shinR', 'footL', 'footR'] };
+const BM_KEY = { head: 'hpart', body: 'bpart' };
+const bmMeshes = {}, bmYaw = {};
+function bmEll(out, part, cx, cy, cz, rx, ry, rz, nu, nv, rf, deco, taper) {
+  const P = (i, j) => { const u = i / nu * Math.PI * 2, v = j / nv * Math.PI, lo = Math.max(0, -Math.cos(v)), f = taper ? 1 - taper * Math.pow(lo, 1.3) : 1; return [cx + rx * f * Math.sin(v) * Math.sin(u), cy + ry * Math.cos(v), cz + rz * f * Math.sin(v) * Math.cos(u) + (taper ? .1 * lo : 0)]; };
+  for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
+    const p = [P(i, j), P(i + 1, j), P(i + 1, j + 1), P(i, j + 1)];
+    const um = (i + .5) / nu * Math.PI * 2, vm = (j + .5) / nv * Math.PI;
+    const n = [Math.sin(vm) * Math.sin(um) / rx, Math.cos(vm) / ry, Math.sin(vm) * Math.cos(um) / rz]; const l = Math.hypot(n[0], n[1], n[2]); n[0] /= l; n[1] /= l; n[2] /= l;
+    const c = [(p[0][0] + p[2][0]) / 2, (p[0][1] + p[2][1]) / 2, (p[0][2] + p[2][2]) / 2];
+    out.push({ p, n, c, r: deco ? null : rf(part, c), deco: !!deco });
+  }
+}
+function bmCyl(out, cx, y0, y1, cz, rx, rz, nu, nv, rf) {
+  const P = (i, j) => { const u = i / nu * Math.PI * 2; return [cx + rx * Math.sin(u), y0 + (y1 - y0) * j / nv, cz + rz * Math.cos(u)]; };
+  for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
+    const p = [P(i, j), P(i + 1, j), P(i + 1, j + 1), P(i, j + 1)], um = (i + .5) / nu * Math.PI * 2;
+    const n = [Math.sin(um) / rx, 0, Math.cos(um) / rz], l = Math.hypot(n[0], n[2]); n[0] /= l; n[2] /= l;
+    const c = [(p[0][0] + p[2][0]) / 2, (p[0][1] + p[2][1]) / 2, (p[0][2] + p[2][2]) / 2];
+    out.push({ p, n, c, r: rf('c', c), deco: false });
+  }
+}
+function bmMesh(kind) {
+  if (bmMeshes[kind]) return bmMeshes[kind];
+  const o = [], side = (x) => x > 0 ? 'L' : 'R';
+  if (kind === 'head') {
+    const crn = (pt, c) => { const [x, y, z] = c; if (y > .62) return 'top'; if (z < -.3) return 'back'; if (y < -.08) return 'face'; if (Math.abs(x) > .52) return 'temple' + side(x); if (y > .32) return 'forehead'; return 'eyes'; };
+    bmEll(o, 'c', 0, .1, 0, .78, .95, .88, 30, 22, crn, false, .3);
+    bmEll(o, 'n', 0, -.12, .86, .11, .2, .16, 10, 8, () => 'face');
+    bmEll(o, 'e', .81, 0, .02, .09, .22, .14, 10, 8, () => 'templeL'); bmEll(o, 'e', -.81, 0, .02, .09, .22, .14, 10, 8, () => 'templeR');
+    bmEll(o, 'k', .3, .12, .8, .09, .06, .05, 8, 6, null, true); bmEll(o, 'k', -.3, .12, .8, .09, .06, .05, 8, 6, null, true);
+    bmCyl(o, 0, -1.75, -.6, -.06, .34, .36, 18, 6, () => 'neck');
+  } else {
+    const sd = (nm) => (pt, c) => nm + side(c[0]);
+    bmEll(o, 'h', 0, 1.72, 0, .27, .33, .29, 16, 10, () => 'head');
+    bmEll(o, 'n', 0, 1.36, 0, .12, .17, .12, 10, 6, () => 'neck');
+    [1, -1].forEach(k => {
+      bmEll(o, 's', .5 * k, 1.14, 0, .2, .15, .17, 12, 8, sd('shoulder'));
+      bmEll(o, 'a', .64 * k, .78, 0, .11, .36, .11, 10, 8, sd('arm'));
+      bmEll(o, 'f', .69 * k, .18, 0, .09, .38, .09, 10, 8, sd('forearm'));
+      bmEll(o, 'f', .71 * k, -.3, 0, .08, .15, .06, 8, 6, sd('forearm'));
+      bmEll(o, 't', .2 * k, -.78, 0, .17, .46, .17, 12, 10, sd('thigh'));
+      bmEll(o, 'k', .2 * k, -1.28, 0, .13, .12, .13, 10, 6, sd('knee'));
+      bmEll(o, 'l', .2 * k, -1.74, 0, .11, .4, .11, 10, 8, sd('shin'));
+      bmEll(o, 'o', .2 * k, -2.2, .1, .1, .06, .2, 10, 6, sd('foot'));
+    });
+    bmEll(o, 'c', 0, .82, 0, .44, .42, .24, 20, 12, (pt, c) => c[2] > .02 ? 'chest' : 'upperback');
+    bmEll(o, 'b', 0, .28, 0, .38, .34, .22, 18, 10, (pt, c) => c[2] > .02 ? 'abdomen' : 'lowerback');
+    bmEll(o, 'p', 0, -.12, 0, .4, .28, .24, 18, 10, () => 'hips');
+  }
+  return bmMeshes[kind] = o;
+}
+const bmDark = () => document.documentElement.dataset.eff === 'dark';
+const bmRGB = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+function bmDraw(cv, kind) {
+  const ctx = cv.getContext('2d'), W = cv.clientWidth, H = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+  if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+  const th = bmYaw[kind] || 0, cs = Math.cos(th), sn = Math.sin(th), sel = S[BM_KEY[kind]] || [];
+  const sc = kind === 'head' ? H / 3.0 : H / 4.55, ym = kind === 'head' ? -.3 : -.12, cx = W / 2, cy = H / 2 + ym * sc;
+  const dark = bmDark(), base = bmRGB(dark ? '#6B6C75' : '#DCD9D0'), hot = bmRGB(dark ? '#8D9BFF' : '#2B3FF5');
+  const L = [-.35, .45, .82], ll = Math.hypot(...L), list = [];
+  bmMesh(kind).forEach(q => {
+    const nz = -q.n[0] * sn + q.n[2] * cs; if (nz <= 0.02) return;
+    const nx = q.n[0] * cs + q.n[2] * sn, ny = q.n[1];
+    const sh = Math.max(0, (nx * L[0] + ny * L[1] + nz * L[2]) / ll);
+    const pts = q.p.map(v => [cx + (v[0] * cs + v[2] * sn) * sc, cy - v[1] * sc]);
+    list.push({ q, pts, sh, z: -q.c[0] * sn + q.c[2] * cs });
+  });
+  list.sort((a, b) => a.z - b.z);
+  list.forEach(it => {
+    const on = it.q.r && sel.includes(it.q.r);
+    const col = it.q.deco ? [30, 30, 36] : on ? hot : base, k = .62 + .5 * it.sh;
+    const f = `rgb(${Math.min(255, col[0] * k) | 0},${Math.min(255, col[1] * k) | 0},${Math.min(255, col[2] * k) | 0})`;
+    ctx.beginPath(); it.pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
+    ctx.fillStyle = f; ctx.fill(); ctx.strokeStyle = f; ctx.lineWidth = .8; ctx.stroke();
+  });
+  cv._hit = list;
+}
+function bmPick(cv, x, y) {
+  const l = cv._hit || [];
+  for (let i = l.length - 1; i >= 0; i--) {
+    const it = l[i]; if (!it.q.r) continue; const p = it.pts; let s = 0, ok = true;
+    for (let a = 0; a < 4; a++) { const b = (a + 1) % 4, cr = (p[b][0] - p[a][0]) * (y - p[a][1]) - (p[b][1] - p[a][1]) * (x - p[a][0]); if (cr !== 0) { if (s === 0) s = Math.sign(cr); else if (Math.sign(cr) !== s) { ok = false; break; } } }
+    if (ok) return it.q.r;
+  }
+  return null;
+}
+function bmSelHtml(kind) {
+  const sel = S[BM_KEY[kind]] || [];
+  return sel.length ? sel.map(r => `<button type="button" class="chip" aria-pressed="true" data-bmrm="${r}">${esc(t('rg_' + r))} ×</button>`).join('') : `<span class="muted" style="font-size:14px">${esc(t('bm_none'))}</span>`;
+}
+function bmHtml(kind) {
+  return `<div class="bmap" data-map="${kind}"><div class="mono">${esc(t(kind === 'head' ? 'bm_head_t' : 'bm_body_t'))}</div>
+    <canvas class="bmc" style="height:${kind === 'head' ? 300 : 440}px" aria-label="${esc(t(kind === 'head' ? 'bm_head_t' : 'bm_body_t'))}"></canvas>
+    <div class="bm-ctl"><button type="button" class="bm-v" data-snap="0">${esc(t('bm_front'))}</button><button type="button" class="bm-v" data-snap="${Math.PI / 2}">${esc(t('bm_side'))}</button><button type="button" class="bm-v" data-snap="${Math.PI}">${esc(t('bm_back'))}</button><span class="mono muted bm-hint">↔ ${esc(t('bm_hint'))}</span></div>
+    <div class="bm-sel">${bmSelHtml(kind)}</div></div>`;
+}
+function bmLines(p) {
+  const o = [], nm = (a) => a.map(r => t('rg_' + r)).join(', ');
+  if ((p.concern || []).includes('headache') && (p.hpart || []).length) o.push(t('bm_hl') + ': ' + nm(p.hpart));
+  if ((p.concern || []).includes('pain') && (p.bpart || []).length) o.push(t('bm_bl') + ': ' + nm(p.bpart));
+  return o;
+}
+function bmMount(app) {
+  app.querySelectorAll('.bmap').forEach(box => {
+    const kind = box.dataset.map, cv = box.querySelector('canvas'), key = BM_KEY[kind], selBox = box.querySelector('.bm-sel');
+    const first = bmYaw[kind] === undefined; if (first) bmYaw[kind] = -.9;
+    let raf = 0;
+    const tween = (to) => {
+      cancelAnimationFrame(raf); const from = bmYaw[kind]; let d = ((to - from + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI; const t0 = performance.now(), dur = 520;
+      const step = (now) => { if (!cv.isConnected) return; const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); bmYaw[kind] = from + d * e; bmDraw(cv, kind); if (k < 1) raf = requestAnimationFrame(step); };
+      raf = requestAnimationFrame(step);
+    };
+    const refresh = () => { selBox.innerHTML = bmSelHtml(kind); bmDraw(cv, kind); };
+    bmDraw(cv, kind); if (first) tween(0);
+    let down = null;
+    cv.addEventListener('pointerdown', e => { cancelAnimationFrame(raf); down = { x: e.clientX, y: e.clientY, yaw: bmYaw[kind], t: Date.now(), moved: false }; try { cv.setPointerCapture(e.pointerId); } catch (er) { } });
+    cv.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - down.x; if (Math.abs(dx) > 5) down.moved = true; if (down.moved) { bmYaw[kind] = down.yaw + dx * .011; bmDraw(cv, kind); } });
+    const up = e => {
+      if (!down) return; const d = down; down = null;
+      if (!d.moved && Date.now() - d.t < 600) {
+        const r = cv.getBoundingClientRect(), id = bmPick(cv, e.clientX - r.left, e.clientY - r.top);
+        if (id) { const a = S[key], i = a.indexOf(id); if (i >= 0) a.splice(i, 1); else a.push(id); save(); refresh(); }
+      }
+    };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', () => { down = null; });
+    box.querySelectorAll('[data-snap]').forEach(b => b.addEventListener('click', () => tween(+b.dataset.snap)));
+    selBox.addEventListener('click', e => { const b = e.target.closest('[data-bmrm]'); if (!b) return; const a = S[key], i = a.indexOf(b.dataset.bmrm); if (i >= 0) a.splice(i, 1); save(); refresh(); });
+  });
+}
 function renderPatient(animate = true) {
   document.documentElement.lang = S.lang;
   document.body.classList.toggle('indic', S.lang !== 'en');
@@ -875,6 +1315,7 @@ function renderPatient(animate = true) {
   const sc = app.querySelector('.scr'); if (sc) { if (!animate) sc.style.animation = 'none'; else if (dirBack) sc.classList.add('back'); }
   if (!animate) { const b = app.querySelector('.body'); if (b) b.scrollTop = keep; }
   voiceDecorate(app);
+  bmMount(app);
 }
 function go(step, back = false) { S.step = step; dirBack = back; save(); renderPatient(true); const b = $('#app .body'); if (b) b.scrollTop = 0; }
 const prevOf = s => (S.editing && s !== 'review' && s !== 'sev' && s !== 'trend') ? 'review' : ORDER[Math.max(0, ORDER.indexOf(s) - 1)];
@@ -906,7 +1347,7 @@ $('#app').addEventListener('click', e => {
     const arr = S[g], i = arr.indexOf(v), excl = { extra: 'none', hist: 'unsure' }[g];
     if (i >= 0) arr.splice(i, 1);
     else { if (excl && v === excl) arr.length = 0; else if (excl && arr.includes(excl)) arr.splice(arr.indexOf(excl), 1); arr.push(v); }
-    if (g === 'concern') { const ok = symList(S.concern); S.extra = S.extra.filter(k => ok.includes(k)); }
+    if (g === 'concern') { const ok = symList(S.concern); S.extra = S.extra.filter(k => ok.includes(k)); if (!S.concern.includes('headache')) S.hpart = []; if (!S.concern.includes('pain')) S.bpart = []; }
     save(); renderPatient(false);
     if (g === 'concern' && v === 'other' && S.concern.includes('other')) { const f = $('#app textarea[data-bind=concernText]'); if (f) { f.focus(); const L = f.value.length; try { f.setSelectionRange(L, L); } catch (er) {} f.scrollIntoView({ block: 'center' }); } }
     if (g === 'medsKinds' && v === 'other' && S.medsKinds.includes('other')) { const f = $('#app textarea[data-bind=medsText]'); if (f) f.focus(); }
@@ -983,14 +1424,16 @@ function summarize(p) {
   if (skipped.length) notShared.push('Skipped: ' + skipped.join(', ') + '.');
   if (!h.length) notShared.push('No health history selected.');
   const also = (p.extra || []).filter(k => k !== 'none').map(k => en('extra', k));
+  const where = []; if ((p.concern || []).includes('headache') && (p.hpart || []).length) where.push('Headache: ' + p.hpart.map(r => tl('rg_' + r, 'en')).join(', ')); if ((p.concern || []).includes('pain') && (p.bpart || []).length) where.push('Pain: ' + p.bpart.map(r => tl('rg_' + r, 'en')).join(', '));
   const asks = (p.asks || []).map(a => a.trim()).filter(Boolean);
   const secs = p.secs || 120; const mins = Math.floor(secs / 60);
   const sent = p.sentAt ? new Date(p.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
   const s = { name, age, lang: L.en, records: (() => { const r = []; if (p.recPhone) r.push('Older records fetched with mobile number (demo): ' + DEMO_REC.map(x => x[0] + ', ' + x[1].split(' · ')[0]).join('; ')); if (p.abhaOk) r.push('ABHA linked' + ((p.abha || '').trim() ? ' (' + p.abha.trim() + ')' : '') + ' (demo)'); (p.files || []).forEach(f => r.push('PDF attached: ' + f.name + ' (' + fmtSize(f.size) + ')')); return r; })(), doc: docOf(p.doc).name, gender: GEN[p.gender] || '', helper: !!p.helper, title: name + (age ? ', ' + age : '') + (p.gender === 'f' ? ' · F' : p.gender === 'm' ? ' · M' : ''), meta: `${p.appt || '10:30 AM'}  ·  ${docOf(p.doc).name}  ·  ${L.en}  ·  ` + (ph ? `+91 ${ph}  ·  ` : '') + (p.helper ? 'filled in by a helper  ·  ' : '') + `filled in ${mins ? mins + ' min ' : ''}${secs % 60}s` + (sent ? `  ·  sent ${sent}` : ''),
-    quote: own || (chips.length ? chips.join(', ') : ''), rewrite, dur: dur ? dur.replace(/^(since|for)\s/, '') : null, durFull: dur, sev: p.sev, trend: trendP, flags, other, notShared, also, alsoText: (p.extraText || '').trim(), asks };
+    quote: own || (chips.length ? chips.join(', ') : ''), rewrite, dur: dur ? dur.replace(/^(since|for)\s/, '') : null, durFull: dur, sev: p.sev, trend: trendP, flags, other, notShared, also, where, alsoText: (p.extraText || '').trim(), asks };
   s.text = [`PRE-VISIT SUMMARY — ${s.title}`, s.meta, '',
     flags.length ? 'CRITICAL FLAGS: ' + flags.join('; ') : 'CRITICAL FLAGS: none reported', '',
     'MAIN CONCERN: ' + (own ? `“${own}” ` : '') + rewrite,
+    ...(where.length ? ['WHERE IT HURTS: ' + where.join('; ')] : []),
     'DURATION / SEVERITY: ' + ([dur, p.sev ? p.sev + '/10' : null, trendP].filter(Boolean).join(', ') || 'not given'),
     'ALSO NOTICED: ' + ([...also, s.alsoText ? `“${s.alsoText}”` : ''].filter(Boolean).join('; ') || 'nothing'),
     'OLDER RECORDS: ' + (s.records.join('; ') || 'none'),
@@ -1104,6 +1547,7 @@ function renderDoctor() {
       ${s.flags.length ? `<div class="flags"><div class="mono">${IC.alert}CRITICAL FLAGS</div><div class="chips">${s.flags.map(f => `<span>${esc(f)}</span>`).join('')}</div></div>` : `<div class="noflags">No critical flags reported.</div>`}
       <div class="cols"><div>
         <div class="drow"><div class="mono">MAIN CONCERN</div>${s.quote ? `<div class="q1">“${esc(s.quote)}”</div>` : ''}<p>${esc(s.rewrite)}</p></div>
+        ${s.where.length ? `<div class="drow"><div class="mono">WHERE IT HURTS</div>${s.where.map(w => `<div class="v">${esc(w)}</div>`).join('')}</div>` : ''}
         <div class="drow"><div class="mono">DURATION AND SEVERITY</div><div class="v">${esc([s.durFull ? s.durFull.replace(/^for /, '').replace(/^since /, 'Since ').replace(/^./, c => c.toUpperCase()) : 'Duration not given', s.trend ? s.trend.charAt(0).toUpperCase() + s.trend.slice(1) : null].filter(Boolean).join('  ·  '))}</div>${sevBar}</div>
         <div class="drow"><div class="mono">ALSO NOTICED</div>${chipsOf(s.also)}${s.alsoText ? `<div class="v">“${esc(s.alsoText)}”</div>` : ''}${!s.also.length && !s.alsoText ? '<p>Nothing added.</p>' : ''}</div>
       </div><div>
