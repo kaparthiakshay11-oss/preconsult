@@ -1178,52 +1178,72 @@ function voiceDecorate(app) {
 const BM_REG = { head: ['forehead', 'eyes', 'templeL', 'templeR', 'top', 'back', 'face', 'neck'], body: ['head', 'neck', 'shoulderL', 'shoulderR', 'chest', 'upperback', 'abdomen', 'lowerback', 'hips', 'armL', 'armR', 'forearmL', 'forearmR', 'thighL', 'thighR', 'kneeL', 'kneeR', 'shinL', 'shinR', 'footL', 'footR'] };
 const BM_KEY = { head: 'hpart', body: 'bpart' };
 const bmMeshes = {}, bmYaw = {};
-function bmEll(out, part, cx, cy, cz, rx, ry, rz, nu, nv, rf, deco, taper) {
-  const P = (i, j) => { const u = i / nu * Math.PI * 2, v = j / nv * Math.PI, lo = Math.max(0, -Math.cos(v)), f = taper ? 1 - taper * Math.pow(lo, 1.3) : 1; return [cx + rx * f * Math.sin(v) * Math.sin(u), cy + ry * Math.cos(v), cz + rz * f * Math.sin(v) * Math.cos(u) + (taper ? .1 * lo : 0)]; };
-  for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
-    const p = [P(i, j), P(i + 1, j), P(i + 1, j + 1), P(i, j + 1)];
-    const um = (i + .5) / nu * Math.PI * 2, vm = (j + .5) / nv * Math.PI;
-    const n = [Math.sin(vm) * Math.sin(um) / rx, Math.cos(vm) / ry, Math.sin(vm) * Math.cos(um) / rz]; const l = Math.hypot(n[0], n[1], n[2]); n[0] /= l; n[1] /= l; n[2] /= l;
-    const c = [(p[0][0] + p[2][0]) / 2, (p[0][1] + p[2][1]) / 2, (p[0][2] + p[2][2]) / 2];
-    out.push({ p, n, c, r: deco ? null : rf(part, c), deco: !!deco });
+const BM_HAIR = [46, 36, 32];
+function bmQuad(out, p, rf, col, cen) {
+  const e1 = [p[1][0] - p[0][0], p[1][1] - p[0][1], p[1][2] - p[0][2]], e2 = [p[3][0] - p[0][0], p[3][1] - p[0][1], p[3][2] - p[0][2]];
+  let n = [e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0]]; const l = Math.hypot(n[0], n[1], n[2]) || 1; n = [n[0] / l, n[1] / l, n[2] / l];
+  const c = [(p[0][0] + p[2][0]) / 2, (p[0][1] + p[2][1]) / 2, (p[0][2] + p[2][2]) / 2];
+  if (cen) { const d = [c[0] - cen(c)[0], 0, c[2] - cen(c)[2]]; if (n[0] * d[0] + n[2] * d[2] < 0) n = [-n[0], -n[1], -n[2]]; }
+  out.push({ p, n, c, r: col && col.deco ? null : (rf ? rf(c) : null), col: col ? col.rgb : null, deco: !!(col && col.deco) });
+}
+/* one smooth surface from stacked elliptical rings: [y, rx, rz, cx, cz], bottom to top */
+function bmLoft(out, rings, nu, sub, rf, o) {
+  o = o || {};
+  const g = i => rings[Math.max(0, Math.min(rings.length - 1, i))], cr = (a, b, c, d, t) => .5 * (2 * b + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t * t + (-a + 3 * b - 3 * c + d) * t * t * t);
+  const R = [];
+  for (let i = 0; i < rings.length - 1; i++) for (let k = 0; k < sub; k++) { const t = k / sub; R.push([0, 1, 2, 3, 4].map(m => cr(g(i - 1)[m], g(i)[m], g(i + 1)[m], g(i + 2)[m], t))); }
+  R.push(rings[rings.length - 1].slice());
+  const sc = o.scale || 1;
+  const V = R.map(r => Array.from({ length: nu + 1 }, (_, i) => { const u = i / nu * Math.PI * 2; return [r[3] + r[1] * sc * Math.sin(u), r[0], r[4] + r[2] * sc * Math.cos(u)]; }));
+  const cen = c => { let b = R[0]; for (const r of R) if (Math.abs(r[0] - c[1]) < Math.abs(b[0] - c[1])) b = r; return [b[3], b[0], b[4]]; };
+  for (let j = 0; j < R.length - 1; j++) for (let i = 0; i < nu; i++) {
+    const p = [V[j][i], V[j][i + 1], V[j + 1][i + 1], V[j + 1][i]], c = [(p[0][0] + p[2][0]) / 2, (p[0][1] + p[2][1]) / 2, (p[0][2] + p[2][2]) / 2];
+    if (o.keep && !o.keep(c)) continue;
+    bmQuad(out, p, rf, o.colf ? { rgb: o.colf(c), deco: false } : (o.col ? { rgb: o.col, deco: !!o.deco } : null), cen);
   }
 }
-function bmCyl(out, cx, y0, y1, cz, rx, rz, nu, nv, rf) {
-  const P = (i, j) => { const u = i / nu * Math.PI * 2; return [cx + rx * Math.sin(u), y0 + (y1 - y0) * j / nv, cz + rz * Math.cos(u)]; };
+function bmEll(out, cx, cy, cz, rx, ry, rz, nu, nv, col, rf) {
+  const P = (i, j) => { const u = i / nu * Math.PI * 2, v = j / nv * Math.PI; return [cx + rx * Math.sin(v) * Math.sin(u), cy + ry * Math.cos(v), cz + rz * Math.sin(v) * Math.cos(u)]; };
   for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
-    const p = [P(i, j), P(i + 1, j), P(i + 1, j + 1), P(i, j + 1)], um = (i + .5) / nu * Math.PI * 2;
-    const n = [Math.sin(um) / rx, 0, Math.cos(um) / rz], l = Math.hypot(n[0], n[2]); n[0] /= l; n[2] /= l;
+    const p = [P(i, j), P(i + 1, j), P(i + 1, j + 1), P(i, j + 1)]; const um = (i + .5) / nu * Math.PI * 2, vm = (j + .5) / nv * Math.PI;
+    const n = [Math.sin(vm) * Math.sin(um) / rx, Math.cos(vm) / ry, Math.sin(vm) * Math.cos(um) / rz], l = Math.hypot(n[0], n[1], n[2]);
     const c = [(p[0][0] + p[2][0]) / 2, (p[0][1] + p[2][1]) / 2, (p[0][2] + p[2][2]) / 2];
-    out.push({ p, n, c, r: rf('c', c), deco: false });
+    out.push({ p, n: [n[0] / l, n[1] / l, n[2] / l], c, r: col && col.deco ? null : (rf ? rf(c) : null), col: col ? (col.f ? col.f(c) : col.rgb) : null, deco: !!(col && col.deco) });
   }
 }
+const BM_SKIN = { l: [226, 187, 160], d: [150, 118, 100] }, BM_SHIRT = { l: [150, 172, 196], d: [92, 108, 128] }, BM_SHORT = { l: [92, 104, 122], d: [60, 68, 82] };
 function bmMesh(kind) {
   if (bmMeshes[kind]) return bmMeshes[kind];
-  const o = [], side = (x) => x > 0 ? 'L' : 'R';
+  const o = [], sd = x => x > 0 ? 'L' : 'R', SK = { rgb: null }, deco = rgb => ({ rgb, deco: true });
   if (kind === 'head') {
-    const crn = (pt, c) => { const [x, y, z] = c; if (y > .62) return 'top'; if (z < -.3) return 'back'; if (y < -.08) return 'face'; if (Math.abs(x) > .52) return 'temple' + side(x); if (y > .32) return 'forehead'; return 'eyes'; };
-    bmEll(o, 'c', 0, .1, 0, .78, .95, .88, 30, 22, crn, false, .3);
-    bmEll(o, 'n', 0, -.12, .86, .11, .2, .16, 10, 8, () => 'face');
-    bmEll(o, 'e', .81, 0, .02, .09, .22, .14, 10, 8, () => 'templeL'); bmEll(o, 'e', -.81, 0, .02, .09, .22, .14, 10, 8, () => 'templeR');
-    bmEll(o, 'k', .3, .12, .8, .09, .06, .05, 8, 6, null, true); bmEll(o, 'k', -.3, .12, .8, .09, .06, .05, 8, 6, null, true);
-    bmCyl(o, 0, -1.75, -.6, -.06, .34, .36, 18, 6, () => 'neck');
-  } else {
-    const sd = (nm) => (pt, c) => nm + side(c[0]);
-    bmEll(o, 'h', 0, 1.72, 0, .27, .33, .29, 16, 10, () => 'head');
-    bmEll(o, 'n', 0, 1.36, 0, .12, .17, .12, 10, 6, () => 'neck');
+    const rings = [[-.98, .1, .18, 0, .56], [-.9, .3, .36, 0, .46], [-.68, .5, .58, 0, .32], [-.38, .63, .74, 0, .2], [-.05, .71, .84, 0, .1], [.3, .75, .9, 0, .03], [.6, .74, .9, 0, -.01], [.85, .62, .77, 0, -.04], [1.0, .4, .5, 0, -.05], [1.08, .12, .16, 0, -.05]];
+    const rf = c => { const [x, y, z] = c; if (y > .66) return 'top'; if (z < -.32) return 'back'; if (y < -.12) return 'face'; if (Math.abs(x) > .5) return 'temple' + sd(x); if (y > .36) return 'forehead'; return 'eyes'; };
+    bmLoft(o, rings, 44, 3, rf);
+    bmLoft(o, rings, 44, 3, rf, { scale: 1.035, col: BM_HAIR, keep: c => c[1] > .78 || (c[2] < -.05 && c[1] > .3) || (c[2] < .5 && c[1] > .55 && Math.abs(c[0]) > .35) });
+    bmLoft(o, [[-1.8, .4, .42, 0, -.1], [-1.3, .33, .35, 0, -.06], [-.9, .3, .34, 0, -.02], [-.55, .32, .36, 0, .0]], 22, 3, () => 'neck');
     [1, -1].forEach(k => {
-      bmEll(o, 's', .5 * k, 1.14, 0, .2, .15, .17, 12, 8, sd('shoulder'));
-      bmEll(o, 'a', .64 * k, .78, 0, .11, .36, .11, 10, 8, sd('arm'));
-      bmEll(o, 'f', .69 * k, .18, 0, .09, .38, .09, 10, 8, sd('forearm'));
-      bmEll(o, 'f', .71 * k, -.3, 0, .08, .15, .06, 8, 6, sd('forearm'));
-      bmEll(o, 't', .2 * k, -.78, 0, .17, .46, .17, 12, 10, sd('thigh'));
-      bmEll(o, 'k', .2 * k, -1.28, 0, .13, .12, .13, 10, 6, sd('knee'));
-      bmEll(o, 'l', .2 * k, -1.74, 0, .11, .4, .11, 10, 8, sd('shin'));
-      bmEll(o, 'o', .2 * k, -2.2, .1, .1, .06, .2, 10, 6, sd('foot'));
+      bmEll(o, .31 * k, .12, .9, .15, .075, .06, 12, 8, deco([245, 244, 240]));
+      bmEll(o, .31 * k, .12, .945, .06, .06, .03, 8, 6, deco([52, 38, 30]));
+      bmEll(o, .32 * k, .29, .92, .2, .035, .05, 10, 6, deco(BM_HAIR));
+      bmEll(o, .77 * k, -.02, .02, .09, .24, .15, 12, 8, null, () => 'temple' + sd(k));
     });
-    bmEll(o, 'c', 0, .82, 0, .44, .42, .24, 20, 12, (pt, c) => c[2] > .02 ? 'chest' : 'upperback');
-    bmEll(o, 'b', 0, .28, 0, .38, .34, .22, 18, 10, (pt, c) => c[2] > .02 ? 'abdomen' : 'lowerback');
-    bmEll(o, 'p', 0, -.12, 0, .4, .28, .24, 18, 10, () => 'hips');
+    bmEll(o, 0, -.08, .96, .1, .28, .14, 12, 10, null, () => 'face');
+    bmEll(o, 0, -.3, .98, .14, .1, .1, 12, 8, null, () => 'face');
+    bmEll(o, 0, -.58, .86, .24, .05, .08, 12, 6, deco([190, 110, 104]));
+  } else {
+    const sk = c => BM_SKIN, dk = bmDark(), pick = t => dk ? t.d : t.l, skin = pick(BM_SKIN), shirt = pick(BM_SHIRT), shorts = pick(BM_SHORT);
+    bmLoft(o, [[-.6, .38, .24, 0, 0], [-.35, .43, .25, 0, 0], [-.05, .39, .22, 0, 0], [.3, .35, .2, 0, 0], [.62, .4, .22, 0, -.01], [.92, .47, .24, 0, -.02], [1.15, .46, .2, 0, -.03], [1.3, .26, .15, 0, -.03], [1.4, .12, .12, 0, -.02]], 40, 3,
+      c => c[1] > 1.3 ? 'neck' : c[1] > .55 ? (c[2] > .0 ? 'chest' : 'upperback') : c[1] > -.02 ? (c[2] > .0 ? 'abdomen' : 'lowerback') : 'hips',
+      { colf: c => c[1] > 1.3 ? skin : c[1] > -.12 ? shirt : shorts });
+    bmEll(o, 0, 1.76, .01, .24, .32, .27, 28, 16, { f: c => (c[1] > 1.9 || (c[2] < -.02 && c[1] > 1.72)) ? BM_HAIR : skin }, () => 'head');
+    [1, -1].forEach(k => {
+      bmEll(o, .52 * k, 1.14, 0, .21, .16, .18, 16, 10, { rgb: shirt }, () => 'shoulder' + (k > 0 ? 'L' : 'R'));
+      bmLoft(o, [[1.1, .1, .1, .64 * k, 0], [.8, .105, .105, .66 * k, 0], [.5, .085, .085, .68 * k, 0], [.3, .09, .09, .69 * k, 0], [-.1, .055, .055, .71 * k, 0]], 16, 3, c => c[1] > .5 ? 'arm' + (k > 0 ? 'L' : 'R') : 'forearm' + (k > 0 ? 'L' : 'R'), { colf: c => c[1] > .55 ? shirt : skin });
+      bmEll(o, .715 * k, -.24, 0, .06, .14, .045, 12, 8, { rgb: skin }, () => 'forearm' + (k > 0 ? 'L' : 'R'));
+      bmLoft(o, [[-.6, .2, .21, .2 * k, 0], [-.85, .18, .19, .2 * k, 0], [-1.0, .17, .18, .2 * k, 0], [-1.15, .12, .13, .2 * k, 0], [-1.3, .115, .12, .2 * k, 0], [-1.55, .125, .14, .2 * k, -.01], [-2.0, .075, .08, .2 * k, 0], [-2.1, .06, .07, .2 * k, 0]], 22, 3,
+        c => c[1] > -1.12 ? 'thigh' + sd(k) : c[1] > -1.42 ? 'knee' + sd(k) : 'shin' + sd(k), { colf: c => c[1] > -.95 ? shorts : skin });
+      bmEll(o, .2 * k, -2.16, .09, .085, .05, .18, 14, 8, { rgb: skin }, () => 'foot' + sd(k));
+    });
   }
   return bmMeshes[kind] = o;
 }
@@ -1235,19 +1255,20 @@ function bmDraw(cv, kind) {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
   const th = bmYaw[kind] || 0, cs = Math.cos(th), sn = Math.sin(th), sel = S[BM_KEY[kind]] || [];
   const sc = kind === 'head' ? H / 3.0 : H / 4.55, ym = kind === 'head' ? -.3 : -.12, cx = W / 2, cy = H / 2 + ym * sc;
-  const dark = bmDark(), base = bmRGB(dark ? '#6B6C75' : '#DCD9D0'), hot = bmRGB(dark ? '#8D9BFF' : '#2B3FF5');
+  const dark = bmDark(); if (bmMeshes._d !== dark) { for (const k in bmMeshes) delete bmMeshes[k]; bmMeshes._d = dark; } const base = dark ? BM_SKIN.d : BM_SKIN.l, hot = bmRGB(dark ? '#8D9BFF' : '#2B3FF5');
+  if (kind === 'body') { ctx.fillStyle = dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.08)'; ctx.beginPath(); ctx.ellipse(cx, cy + 2.2 * sc, .6 * sc, .09 * sc, 0, 0, 7); ctx.fill(); }
   const L = [-.35, .45, .82], ll = Math.hypot(...L), list = [];
   bmMesh(kind).forEach(q => {
-    const nz = -q.n[0] * sn + q.n[2] * cs; if (nz <= 0.02) return;
+    const nz = -q.n[0] * sn + q.n[2] * cs; if (nz <= 0.0) return;
     const nx = q.n[0] * cs + q.n[2] * sn, ny = q.n[1];
     const sh = Math.max(0, (nx * L[0] + ny * L[1] + nz * L[2]) / ll);
     const pts = q.p.map(v => [cx + (v[0] * cs + v[2] * sn) * sc, cy - v[1] * sc]);
-    list.push({ q, pts, sh, z: -q.c[0] * sn + q.c[2] * cs });
+    list.push({ q, pts, sh, nz, z: -q.c[0] * sn + q.c[2] * cs });
   });
   list.sort((a, b) => a.z - b.z);
   list.forEach(it => {
     const on = it.q.r && sel.includes(it.q.r);
-    const col = it.q.deco ? [30, 30, 36] : on ? hot : base, k = .62 + .5 * it.sh;
+    const col = on ? hot : (it.q.col || base), k = .5 + .62 * it.sh + .16 * Math.pow(1 - it.nz, 3);
     const f = `rgb(${Math.min(255, col[0] * k) | 0},${Math.min(255, col[1] * k) | 0},${Math.min(255, col[2] * k) | 0})`;
     ctx.beginPath(); it.pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
     ctx.fillStyle = f; ctx.fill(); ctx.strokeStyle = f; ctx.lineWidth = .8; ctx.stroke();
